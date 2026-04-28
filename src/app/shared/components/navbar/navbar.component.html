@@ -1,0 +1,30 @@
+<div class="navbar-wrapper shadow-2">
+    <p-menubar [model]="items">
+
+        <ng-template pTemplate="start">
+            <div class="brand-logo mr-4 cursor-pointer flex align-items-center" routerLink="/">
+                <i class="pi pi-shopping-bag text-primary text-2xl mr-2"></i>
+                <span class="font-bold text-xl text-900">E-Ticaret</span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="end">
+            <div class="flex align-items-center gap-3">
+
+                <span class="p-input-icon-left hidden md:block">
+                    <i class="pi pi-search"></i>
+                    <input type="text" pInputText placeholder="Ürün ara..." class="p-inputtext-sm" />
+                </span>
+
+                <p-button icon="pi pi-shopping-cart" [rounded]="true" [text]="true" severity="secondary" pBadge
+                    [value]="cartItemCount.toString()" [badgeDisabled]="cartItemCount === 0" badgeSeverity="danger">
+                </p-button>
+
+                <p-button label="Giriş Yap" [outlined]="true" size="small"></p-button>
+                <p-button label="Kayıt Ol" size="small"></p-button>
+
+            </div>
+        </ng-template>
+
+    </p-menubar>
+</div>

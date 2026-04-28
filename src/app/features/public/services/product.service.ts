@@ -57,8 +57,6 @@ export class ProductService {
    * Belirli bir ürüne ait müşteri değerlendirmelerini getirir
    */
   getProductReviews(productId: string): Observable<ReviewDTO[]> {
-    // apiUrl '/products' ile bittiği için, yorumlar için ana URL'den türetiyoruz
-    const reviewsApiUrl = this.apiUrl.replace('/products', '/reviews');
-    return this.http.get<ReviewDTO[]>(`${reviewsApiUrl}/product/${productId}`);
+    return this.http.get<ReviewDTO[]>(`${this.reviewsApiUrl}/product/${productId}`);
   }
 }

@@ -1,0 +1,25 @@
+.navbar-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: var(--surface-card);
+
+    /* Menubar'ın kendi border'ını kaldırıp daha temiz bir görünüm veriyoruz */
+    ::ng-deep .p-menubar {
+        border: none;
+        border-radius: 0;
+        padding: 1rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .brand-logo {
+        display: flex;
+        align-items: center;
+        transition: opacity 0.2s;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}

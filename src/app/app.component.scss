@@ -21,3 +21,15 @@
     text-align: center;
     color: #64748b;
 }
+
+.main-content {
+    margin-top: 20px; // Navbar ile içerik arasına boşluk
+    padding: 1rem;
+}
+
+// Navbar'ın her zaman en üstte ve görünür olduğundan emin olalım
+::ng-deep .navbar-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
