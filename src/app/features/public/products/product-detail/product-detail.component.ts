@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router'; // RouterModule 
 import { switchMap } from 'rxjs/operators'; // Daha temiz veri çekimi için
 import { ProductService } from '../../services/product.service';
 import { ProductDTO, ProductVariantDTO, ReviewDTO } from '../../../../shared/models/product.model';
+import { CartService } from '../../../checkout-flow/services/cart.service';
 
 // PrimeNG v18 Güncel Modülleri
 import { ButtonModule } from 'primeng/button';
@@ -40,10 +41,29 @@ export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
 
+  private cartService = inject(CartService);
+
   product: ProductDTO | null = null;
   reviews: ReviewDTO[] = [];
   selectedVariant: ProductVariantDTO | null = null;
   loading: boolean = true;
+
+
+  addToCart() {
+    if (!this.selectedVariant) return;
+
+    // Varsayılan olarak 1 adet ekliyoruz. İstersen arayüze bir miktar (quantity) input'u da koyabilirsin.
+    this.cartService.addToCart(this.selectedVariant.id, 1).subscribe({
+      next: (response) => {
+        console.log('Sepete eklendi!', response);
+        // this.messageService.add({ severity: 'success', summary: 'Başarılı', detail: 'Ürün sepete eklendi.' });
+      },
+      error: (err) => {
+        console.error('Sepete eklenirken hata oluştu', err);
+        // this.messageService.add({ severity: 'error', summary: 'Hata', detail: 'Stok yetersiz veya sunucu hatası.' });
+      }
+    });
+  }
 
   ngOnInit() {
     // URL'deki ID değiştiğinde veriyi otomatik yenileyen yapı
@@ -82,9 +102,5 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
-  addToCart() {
-    if (!this.selectedVariant) return;
-    console.log('Sepete eklenecek varyant:', this.selectedVariant);
-    // TODO: CartService entegrasyonu buraya gelecek
-  }
+
 }

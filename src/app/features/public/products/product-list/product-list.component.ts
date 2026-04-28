@@ -1,17 +1,20 @@
-import { ProductDTO, PageProductDTO } from './../../../../shared/models/product.model';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProductService } from '../../services/product.service';
+import { RouterModule } from '@angular/router';
 
-// PrimeNG v18 Güncel Modülleri
+// Servisler ve Modeller
+import { ProductService } from '../../services/product.service';
+import { CartService } from '../../../checkout-flow/services/cart.service';
+import { ProductDTO } from './../../../../shared/models/product.model';
+
+// PrimeNG v18+ Modülleri
 import { DataViewModule } from 'primeng/dataview';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { PaginatorModule } from 'primeng/paginator';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
@@ -20,36 +23,46 @@ import { TooltipModule } from 'primeng/tooltip';
   imports: [
     CommonModule,
     FormsModule,
+    RouterModule,
     DataViewModule,
     ButtonModule,
     TagModule,
     InputTextModule,
     PaginatorModule,
     TooltipModule,
-    ProgressSpinnerModule,
-    RouterModule
+    ProgressSpinnerModule
   ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
 })
 export class ProductListComponent implements OnInit {
+  // Bağımlılıklar (Inject)
   private productService = inject(ProductService);
+  private cartService = inject(CartService);
+  private cdr = inject(ChangeDetectorRef); // Hata çözümü için kritik
 
+  // State (Durum) Değişkenleri
   products: ProductDTO[] = [];
   totalElements: number = 0;
-  loading: boolean = true;
+  loading: boolean = true; // Başlangıç değeri true kalsın
 
+  // Sayfalama Ayarları
   currentPage: number = 0;
   pageSize: number = 12;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadProducts();
   }
 
-  loadProducts() {
+  /**
+   * Ürünleri API'den çeker ve state'i günceller
+   */
+  loadProducts(): void {
     this.loading = true;
 
-    // Sort parametresi tamamen kaldırıldı, sadece sayfalama bilgileri gidiyor
+    // Değer değişimini Angular'a hemen bildir (NG0100 hatasını engeller)
+    this.cdr.detectChanges();
+
     this.productService.getProducts(this.currentPage, this.pageSize)
       .subscribe({
         next: (response: any) => {
@@ -58,30 +71,50 @@ export class ProductListComponent implements OnInit {
             this.totalElements = response.totalElements;
           }
           this.loading = false;
-          console.log('Component ürün sayısı:', this.products.length);
+          // Veri geldikten sonra ekranı tekrar güncelle
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Ürünler yüklenirken hata:', err);
           this.loading = false;
+          this.cdr.detectChanges();
         }
       });
   }
 
-  toggleFavorite(product: ProductDTO) {
-    console.log('Favorilere eklenecek/çıkarılacak ürün:', product.id);
-    // TODO: WishlistService bağlandığında burası güncellenecek
+  /**
+   * Ürünü sepete ekler (Varyant kontrolü ile)
+   */
+  addToCart(product: any): void {
+    if (!product.variants || product.variants.length === 0) {
+      console.warn('Bu ürünün varyantı bulunmuyor.');
+      return;
+    }
+
+    const defaultVariantId = product.variants[0].id;
+
+    this.cartService.addToCart(defaultVariantId, 1).subscribe({
+      next: (response) => {
+        console.log('Ürün sepete eklendi:', response);
+        // Burada isteğe bağlı olarak PrimeNG MessageService ile Toast gösterilebilir
+      },
+      error: (err) => console.error('Sepete ekleme hatası:', err)
+    });
   }
 
-  addToCart(product: ProductDTO) {
-    // Eğer ürünün varyantları varsa, varsayılan olarak ilk varyantı veya base halini ekliyoruz
-    const variantId = product.variants && product.variants.length > 0 ? product.variants[0].id : null;
-    console.log('Sepete eklenen ürün:', product.id, 'Varyant:', variantId);
-    // TODO: CartService bağlandığında burası güncellenecek
-  }
-
-  onPageChange(event: any) {
+  /**
+   * Sayfa değişim olayını yakalar
+   */
+  onPageChange(event: any): void {
     this.currentPage = event.page;
     this.pageSize = event.rows;
     this.loadProducts();
+  }
+
+  /**
+   * Favori ikonunu tetikler
+   */
+  toggleFavorite(product: ProductDTO): void {
+    console.log('Favori işlemi:', product.id);
   }
 }

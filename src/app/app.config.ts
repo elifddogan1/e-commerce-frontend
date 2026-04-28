@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideHttpClient(
       withFetch(),
-      //withInterceptors([jwtInterceptor]) // Birazdan yazacağımız interceptor
+      withInterceptors([jwtInterceptor])
     ),
     providePrimeNG({
         theme: {

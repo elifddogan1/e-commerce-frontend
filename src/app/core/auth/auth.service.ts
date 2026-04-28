@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/v1/auth/login`, credentials).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap(response => {
         this.saveToken(response.token);
       })
@@ -37,11 +37,11 @@ export class AuthService {
   }
 
   registerUser(data: RegisterRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/v1/auth/register/user`, data);
+    return this.http.post(`${this.apiUrl}/auth/register/user`, data);
   }
 
   registerSeller(data: RegisterRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/v1/auth/register/seller`, data);
+    return this.http.post(`${this.apiUrl}/auth/register/seller`, data);
   }
 
   logout(): void {

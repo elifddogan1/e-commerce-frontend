@@ -1,0 +1,29 @@
+<div class="cart-item-wrapper flex align-items-center p-3 border-bottom-1 surface-border gap-3">
+
+    <div class="product-image">
+        <img [src]="'assets/images/placeholder-product.png'" [alt]="item.productName"
+            class="w-5rem shadow-2 border-round">
+    </div>
+
+    <div class="flex-grow-1 flex flex-column">
+        <span class="font-bold text-lg">{{ item.productName }}</span>
+        <span class="text-sm text-500">{{ item.variantName }}</span>
+        <span class="text-primary font-medium mt-1">{{ item.unitPrice }} TL</span>
+    </div>
+
+    <div class="flex align-items-center gap-2">
+        <p-button icon="pi pi-minus" [rounded]="true" [text]="true" severity="secondary"
+            (onClick)="onQuantityChange(item.quantity - 1)" [disabled]="item.quantity <= 1"></p-button>
+
+        <span class="font-bold w-2rem text-center">{{ item.quantity }}</span>
+
+        <p-button icon="pi pi-plus" [rounded]="true" [text]="true" severity="secondary"
+            (onClick)="onQuantityChange(item.quantity + 1)"
+            [disabled]="item.quantity >= item.maxAvailableStock"></p-button>
+    </div>
+
+    <div class="flex flex-column align-items-end min-w-max ml-4">
+        <span class="font-bold text-xl">{{ item.totalPrice }} TL</span>
+        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (onClick)="onRemove()"></p-button>
+    </div>
+</div>
