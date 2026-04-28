@@ -1,0 +1,23 @@
+/* Ana sayfa düzenleyicisi (Layout Wrapper) */
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; // Sayfa içeriği az olsa bile footer'ı en aşağıya iter
+}
+
+/* Navbar'ın altında kalan ana içerik alanı */
+.main-content {
+    flex: 1 1 auto; // Kalan tüm boşluğu doldurur
+    padding-top: 2rem; // Navbar ile içerik arasına boşluk bırakır (Navbar yüksekliğine göre ayarlanır)
+    padding-bottom: 2rem;
+    width: 100%;
+}
+
+/* Eğer bir footer ekleyeceksen */
+.footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    padding: 2rem 0;
+    text-align: center;
+    color: #64748b;
+}

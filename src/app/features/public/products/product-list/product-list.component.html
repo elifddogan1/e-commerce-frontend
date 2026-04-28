@@ -1,0 +1,58 @@
+<div class="product-list-container">
+
+  <!-- Başlık Kısmı -->
+  <div class="header-section">
+    <h2 class="title">Tüm Ürünler</h2>
+    <span class="subtitle" *ngIf="!loading">{{ totalElements }} ürün bulundu</span>
+  </div>
+
+  <!-- Yükleniyor Durumu -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="loader-spinner"></div>
+    <p>Ürünleriniz yükleniyor, lütfen bekleyin...</p>
+  </div>
+
+  <!-- Boş Liste Durumu -->
+  <div *ngIf="!loading && products.length === 0" class="empty-state">
+    <i class="pi pi-box" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 1rem; display: block;"></i>
+    <p>Arama kriterlerinize uygun ürün bulunamadı.</p>
+  </div>
+
+  <!-- Ürünler Grid -->
+  <div *ngIf="!loading && products.length > 0" class="products-grid">
+    <div *ngFor="let product of products" class="product-card">
+      
+      <div class="image-container">
+        <!-- İsteğe bağlı bir badge, şimdilik statik 'Yeni' yazısı -->
+        <span class="badge" style="background: #3b82f6;">YENİ</span>
+        <img 
+          [src]="product.variants && product.variants[0]?.imageUrl ? product.variants[0].imageUrl : 'https://placehold.co/400x400/f8fafc/94a3b8?text=Görsel+Yok'" 
+          [alt]="product.name">
+      </div>
+      
+      <div class="product-details">
+        <div class="category-tag">Ürün Kodu: {{ product.id }}</div>
+        <h3 class="product-title">{{ product.name }}</h3>
+        <p class="product-desc">{{ product.description }}</p>
+        
+        <div class="product-footer">
+          <span class="price">{{ product.basePrice }}</span>
+          <!-- PrimeNG Butonu -->
+          <p-button icon="pi pi-shopping-cart" [rounded]="true" [outlined]="true" severity="secondary"></p-button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Paginator (Sayfalama) -->
+  <div class="pagination-container" *ngIf="!loading && totalElements > 0">
+    <p-paginator 
+      (onPageChange)="onPageChange($event)" 
+      [first]="currentPage * pageSize" 
+      [rows]="pageSize" 
+      [totalRecords]="totalElements">
+    </p-paginator>
+  </div>
+
+</div>
