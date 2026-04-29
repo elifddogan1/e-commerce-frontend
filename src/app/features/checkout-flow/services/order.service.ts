@@ -14,9 +14,10 @@ export class OrderService {
   private apiUrl = `${environment.apiUrl}/orders`;
 
   // 1. Müşteri Siparişi Tamamlar
-  checkout(request: CheckoutRequest): Observable<any[]> {
-    return this.http.post<any[]>(`${this.apiUrl}/checkout`, request);
-  }
+  // features/checkout-flow/services/order.service.ts
+checkout(request: { shippingAddressId: string }): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/checkout`, request);
+}
 
   // 2. Müşteri Kendi Siparişlerini Görür
   getMyOrders(): Observable<any[]> {

@@ -1,8 +1,15 @@
+import { MyAddressesComponent } from './features/user-panel/my-addresses/my-addresses/my-addresses.component';
 import { Routes } from '@angular/router';
+
+// Bileşen Importları (Feature bazlı)
 import { ProductListComponent } from './features/public/products/product-list/product-list.component';
 import { ProductDetailComponent } from './features/public/products/product-detail/product-detail.component';
 import { CartComponent } from './features/checkout-flow/cart/cart/cart.component';
-import { authGuard } from './core/guards/auth.guard'; // Guard import edildi
+import { CheckoutPageComponent } from './features/checkout-flow/pages/checkout-page/checkout-page.component';
+
+// Core & Guard
+import { authGuard } from './core/guards/auth.guard';
+import { AUTH_ROUTES } from './features/auth/auth.routes';
 
 export const routes: Routes = [
   {
@@ -10,6 +17,8 @@ export const routes: Routes = [
     pathMatch: 'full',
     redirectTo: 'products'
   },
+
+  // Public (Herkes görebilir)
   {
     path: 'products',
     title: 'Ürünler | E-Ticaret',
@@ -20,17 +29,47 @@ export const routes: Routes = [
     title: 'Ürün Detayı | E-Ticaret',
     component: ProductDetailComponent
   },
+
+  // Auth (Giriş/Kayıt - auth.routes içindeki alt rotalar)
   {
     path: 'auth',
-    loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES)
+    children: AUTH_ROUTES // AUTH_ROUTES'u yukarıda import ettik
   },
+
+  // Sepet (Misafir girebilir, ama SELLER/ADMIN giremez)
   {
     path: 'cart',
     title: 'Sepetim | E-Ticaret',
     component: CartComponent,
-    canActivate: [authGuard], // Guard eklendi
-    data: { forbiddenRoles: ['SELLER', 'ADMIN'] } // Satıcı ve Admin giremez
+    canActivate: [authGuard],
+    data: { forbiddenRoles: ['SELLER', 'ADMIN'] }
   },
+
+  // Checkout (SADECE giriş yapmış USER rolü girebilir)
+  {
+    path: 'checkout',
+    title: 'Siparişi Tamamla | E-Ticaret',
+    component: CheckoutPageComponent,
+    canActivate: [authGuard],
+    data: { requiredRoles: ['USER'] }
+  },
+
+  // Kullanıcı Paneli (SADECE giriş yapmış USER rolü girebilir)
+  {
+    path: 'user-panel',
+    canActivate: [authGuard],
+    data: { requiredRoles: ['USER'] },
+    children: [
+      {
+        path: 'my-addresses',
+        title: 'Adreslerim | E-Ticaret',
+        component: MyAddressesComponent
+      },
+      // Gelecekte my-orders gibi sayfalar buraya eklenecek
+    ]
+  },
+
+  // Hatalı rotaları anasayfaya at
   {
     path: '**',
     redirectTo: 'products'

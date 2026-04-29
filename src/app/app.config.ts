@@ -7,6 +7,7 @@ import { routes } from './app.routes';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
+import { provideNgxStripe } from 'ngx-stripe';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,6 +25,7 @@ export const appConfig: ApplicationConfig = {
                 darkModeSelector: '.my-app-dark' // Opsiyonel
             }
         }
-    })
+    }),
+    provideNgxStripe('pk_test_51TRZWwRMOSr5NPkDz2QzTAO9ewvMGyDJDjJBS1gAmqQHqSSyOOQy9tjfkxqJfvURz9q1esrJJLaCbYSLRsg2Jbgu00neNFcCgM')
   ]
 };
