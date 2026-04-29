@@ -1,1 +1,40 @@
-<p>cart works!</p>
+<div class="cart-container p-4">
+  @if (authService.isLoggedIn()) {
+    <h2>Sepetinizdeki Ürünler</h2>
+    <hr />
+
+    @if (cart$ | async; as cart) {
+      @if (cart.items && cart.items.length > 0) {
+
+        <div class="flex flex-column gap-3">
+          @for (item of cart.items; track item.id) {
+            <app-cart-item
+              [item]="item"
+              (remove)="removeItem($event)"
+              (updateQuantity)="updateItemQuantity($event)">
+            </app-cart-item>
+          }
+        </div>
+
+        <div class="flex justify-content-end mt-4">
+            <div class="w-full md:w-4 surface-100 p-4 border-round shadow-1">
+                <div class="flex justify-content-between font-bold text-xl mb-4 text-900">
+                    <span>Genel Toplam:</span>
+                    <span class="text-primary">{{ cart.cartTotal }} TL</span>
+                </div>
+                <p-button
+                    label="Siparişi Tamamla"
+                    icon="pi pi-check"
+                    styleClass="w-full p-button-success p-button-lg"
+                    [routerLink]="['/checkout']">
+                </p-button>
+            </div>
+        </div>
+
+      } @else {
+        <p class="text-600 text-lg mt-4">Sepetiniz şu an boş.</p>
+      }
+    }
+  } @else {
+    }
+</div>

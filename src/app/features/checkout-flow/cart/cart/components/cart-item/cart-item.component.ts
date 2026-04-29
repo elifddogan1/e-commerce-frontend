@@ -7,12 +7,14 @@ import { CartItemDTO } from '../../../../../../shared/models/cart.model';
   selector: 'app-cart-item',
   standalone: true,
   imports: [CommonModule, ButtonModule],
-  templateUrl: './cart-item.component.html', // Ayrı dosyayı işaret ediyoruz
+  templateUrl: './cart-item.component.html',
   styleUrls: ['./cart-item.component.scss']
 })
 export class CartItemComponent {
+  // Parent'tan gelen ürün verisi
   @Input({ required: true }) item!: CartItemDTO;
 
+  // Parent'a gönderilecek olaylar
   @Output() remove = new EventEmitter<string>();
   @Output() updateQuantity = new EventEmitter<{ id: string, quantity: number }>();
 
@@ -21,8 +23,12 @@ export class CartItemComponent {
   }
 
   onQuantityChange(newQuantity: number) {
-    if (newQuantity > 0 && newQuantity <= this.item.maxAvailableStock) {
-      this.updateQuantity.emit({ id: this.item.id, quantity: newQuantity });
-    }
+  if (newQuantity === 0) {
+    // Miktar 0 olursa ürünü sepetten sil
+    this.remove.emit(this.item.id);
+  } else if (newQuantity > 0 && newQuantity <= this.item.maxAvailableStock) {
+    // Normal miktar güncellemesi
+    this.updateQuantity.emit({ id: this.item.id, quantity: newQuantity });
   }
+}
 }

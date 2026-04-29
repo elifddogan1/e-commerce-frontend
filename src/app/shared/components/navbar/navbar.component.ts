@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { BadgeModule } from 'primeng/badge';
 import { CategoryService } from '../../../features/public/services/category.service';
 import { CartService } from '../../../features/checkout-flow/services/cart.service';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -25,6 +26,7 @@ import { CartService } from '../../../features/checkout-flow/services/cart.servi
 })
 export class NavbarComponent implements OnInit {
   private categoryService = inject(CategoryService);
+  public authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef); // 1. ChangeDetectorRef'i inject ediyoruz
 
   items: MenuItem[] = [];

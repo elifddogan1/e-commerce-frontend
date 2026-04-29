@@ -1,33 +1,62 @@
 <div class="navbar-wrapper shadow-2">
-    <p-menubar [model]="items">
+  <p-menubar [model]="items">
 
-        <ng-template pTemplate="start">
-            <div class="brand-logo mr-4 cursor-pointer flex align-items-center" routerLink="/products">
-                <i class="pi pi-shopping-bag text-primary text-2xl mr-2"></i>
-                <span class="font-bold text-xl text-900">E-Ticaret</span>
-            </div>
-        </ng-template>
+      <ng-template pTemplate="start">
+          <div class="brand-logo mr-4 cursor-pointer flex align-items-center" routerLink="/products">
+              <i class="pi pi-shopping-bag text-primary text-2xl mr-2"></i>
+              <span class="font-bold text-xl text-900">E-Ticaret</span>
+          </div>
+      </ng-template>
 
-        <ng-template pTemplate="end">
-            <div class="flex align-items-center gap-3">
+      <ng-template pTemplate="end">
+          <div class="flex align-items-center gap-3">
 
-                <span class="p-input-icon-left hidden md:block">
-                    <i class="pi pi-search"></i>
-                    <input type="text" pInputText placeholder="Ürün ara..." class="p-inputtext-sm" />
-                </span>
+              <span class="p-input-icon-left hidden md:block">
+                  <i class="pi pi-search"></i>
+                  <input type="text" pInputText placeholder="Ürün ara..." class="p-inputtext-sm" />
+              </span>
 
+              @if (authService.showCartIcon()) {
                 <p-button icon="pi pi-shopping-cart" routerLink="/cart" [rounded]="true" [text]="true">
                     <p-badge *ngIf="cartItemCount > 0" [value]="cartItemCount.toString()" severity="danger"></p-badge>
                 </p-button>
+              }
 
-                <p-button label="Giriş Yap" [outlined]="true" size="small" [routerLink]="['/auth/login']">
-                </p-button>
+              <div class="flex gap-2">
+                @if (authService.isLoggedIn()) {
+                    <p-button
+                        label="Profilim"
+                        icon="pi pi-user"
+                        [outlined]="true"
+                        size="small"
+                        [routerLink]="['/profile']">
+                    </p-button>
 
-                <p-button label="Kayıt Ol" size="small" [routerLink]="['/auth/register']">
-                </p-button>
+                    <p-button
+                        label="Çıkış Yap"
+                        icon="pi pi-sign-out"
+                        severity="danger"
+                        size="small"
+                        (onClick)="authService.logout()">
+                    </p-button>
+                } @else {
+                    <p-button
+                        label="Giriş Yap"
+                        [outlined]="true"
+                        size="small"
+                        [routerLink]="['/auth/login']">
+                    </p-button>
 
-            </div>
-        </ng-template>
+                    <p-button
+                        label="Kayıt Ol"
+                        size="small"
+                        [routerLink]="['/auth/register']">
+                    </p-button>
+                }
+              </div>
 
-    </p-menubar>
+          </div>
+      </ng-template>
+
+  </p-menubar>
 </div>

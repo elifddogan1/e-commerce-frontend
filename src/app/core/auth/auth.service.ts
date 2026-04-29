@@ -1,10 +1,12 @@
-import { AuthResponse, LoginRequest, RegisterRequest } from '../../shared/models/auth.model';// .model kısmını sildik, dosya adın auth.ts ise böyle kalmalı
-import { Injectable, inject, PLATFORM_ID } from '@angular/core'; // PLATFORM_ID eklendi
-import { isPlatformBrowser } from '@angular/common'; // isPlatformBrowser eklendi
+import { AuthResponse, LoginRequest, RegisterRequest } from '../../shared/models/auth.model';
+import { Injectable, inject, PLATFORM_ID, computed } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +14,44 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
-
-  // PLATFORM_ID'yi inject ediyoruz
+  private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
 
-  // Başlangıçta token'ı güvenli bir şekilde alıyoruz
   private tokenSubject = new BehaviorSubject<string | null>(this.getInitialToken());
   token$ = this.tokenSubject.asObservable();
 
-  // Sunucu tarafında patlamaması için başlangıç kontrolü
+  // 1. Kullanıcının giriş yapıp yapmadığını tutan Signal
+  isLoggedIn = toSignal(
+    this.token$.pipe(map(token => !!token)),
+    { initialValue: !!this.getInitialToken() }
+  );
+
+  // 2. Kullanıcının rolünü anlık dinleyen Signal
+  userRole = toSignal(
+    this.token$.pipe(map(() => this.getRole())),
+    { initialValue: this.getRole() }
+  );
+
+  // 3. Sepet ikonunun gösterilip gösterilmeyeceğine karar veren Computed Signal
+  showCartIcon = computed(() => {
+    // Hiç giriş yapılmamışsa sepeti göster (Tıklayınca logine atma mantığın için)
+    if (!this.isLoggedIn()) {
+      return true;
+    }
+
+    const role = this.userRole();
+    if (!role) return true;
+
+    // Spring Boot'tan gelen rol string ('ROLE_SELLER') veya array ([{authority: 'ROLE_SELLER'}]) olabilir
+    const roleString = typeof role === 'string' ? role.toUpperCase() : JSON.stringify(role).toUpperCase();
+
+    // Eğer rol Seller veya Admin içeriyorsa sepeti GİZLE
+    const isSellerOrAdmin = roleString.includes('SELLER') || roleString.includes('ADMIN');
+
+    // Satıcı veya Admin DEĞİLSE (yani User ise) göster
+    return !isSellerOrAdmin;
+  });
+
   private getInitialToken(): string | null {
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem('token');
@@ -49,6 +80,7 @@ export class AuthService {
       localStorage.removeItem('token');
     }
     this.tokenSubject.next(null);
+    this.router.navigate(['/products']);
   }
 
   private saveToken(token: string): void {
@@ -65,16 +97,10 @@ export class AuthService {
     return null;
   }
 
-  isLoggedIn(): boolean {
-    return !!this.getToken();
-  }
-
   getDecodedToken(): any {
     const token = this.getToken();
     if (!token) return null;
     try {
-      // btoa/atob tarayıcı API'sidir. Node.js'de (SSR) sıkıntı çıkarabilir.
-      // getToken() zaten null döneceği için sunucuda buraya girmez ama yine de güvenlidir.
       const payload = token.split('.')[1];
       return JSON.parse(atob(payload));
     } catch (e) {
