@@ -1,0 +1,63 @@
+<div class="register-container flex justify-content-center align-items-center min-h-screen surface-ground py-5">
+  <p-card styleClass="w-full sm:w-30rem shadow-4 border-round-xl p-3">
+
+    <div class="text-center mb-5">
+      <i class="pi pi-user-plus text-primary text-5xl mb-3"></i>
+      <div class="text-900 text-3xl font-medium mb-3">Hesap Oluştur</div>
+      <span class="text-600 font-medium">Aramıza katılın ve alışverişe başlayın</span>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-4">
+
+      <p-message *ngIf="errorMessage" severity="error" [text]="errorMessage" styleClass="w-full"></p-message>
+
+      <div class="flex gap-3">
+        <div class="flex flex-column gap-2 flex-1">
+          <label for="firstName" class="font-bold text-900">Ad</label>
+          <input pInputText id="firstName" formControlName="firstName" placeholder="Adınız" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched}" />
+        </div>
+        <div class="flex flex-column gap-2 flex-1">
+          <label for="lastName" class="font-bold text-900">Soyad</label>
+          <input pInputText id="lastName" formControlName="lastName" placeholder="Soyadınız" class="w-full"
+            [ngClass]="{'ng-invalid ng-dirty': registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched}" />
+        </div>
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="email" class="font-bold text-900">E-posta</label>
+        <input pInputText id="email" formControlName="email" type="email" placeholder="E-posta adresiniz" class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}" />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="password" class="font-bold text-900">Şifre</label>
+        <p-password id="password" formControlName="password" [toggleMask]="true" placeholder="Güçlü bir şifre"
+          styleClass="w-full" [inputStyle]="{'width':'100%'}"
+          [styleClass]="(registerForm.get('password')?.invalid && registerForm.get('password')?.touched) ? 'ng-invalid ng-dirty w-full' : 'w-full'">
+        </p-password>
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="phone" class="font-bold text-900">Telefon (İsteğe Bağlı)</label>
+        <input pInputText id="phone" formControlName="phone" placeholder="05XX XXX XX XX" class="w-full" />
+      </div>
+
+      <div class="flex align-items-center gap-2 mt-2">
+        <p-toggleButton formControlName="isSeller" onLabel="Satıcı Kaydı" offLabel="Müşteri Kaydı" 
+          onIcon="pi pi-shop" offIcon="pi pi-user"></p-toggleButton>
+      </div>
+
+      <p-button label="Kayıt Ol" icon="pi pi-user-plus" styleClass="w-full mt-2" type="submit" 
+        [loading]="isLoading" [disabled]="registerForm.invalid"></p-button>
+    </form>
+
+    <div class="text-center mt-4">
+      <span class="text-600 font-medium">Zaten hesabınız var mı?</span>
+      <a routerLink="/auth/login" class="font-medium no-underline ml-2 text-primary hover:text-primary-600 transition-colors">
+        Giriş Yapın
+      </a>
+    </div>
+
+  </p-card>
+</div>

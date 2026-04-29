@@ -2,8 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { CartDTO, CartItemDTO } from '../../../shared/models/cart.model';
-
+import { CartDTO, CartItemDTO, AddToCartRequest } from '../../../shared/models/cart.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -26,8 +25,8 @@ export class CartService {
     );
   }
 
-  addToCart(variantId: string, quantity: number = 1): Observable<CartDTO> {
-    return this.http.post<CartDTO>(`${this.apiUrl}/add`, { variantId, quantity }).pipe(
+  addToCart(request: AddToCartRequest): Observable<CartDTO> {
+    return this.http.post<CartDTO>(`${this.apiUrl}/items`, request).pipe(
       tap(updatedCart => this.cartSubject.next(updatedCart))
     );
   }

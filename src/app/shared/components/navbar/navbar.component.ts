@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { BadgeModule } from 'primeng/badge';
 import { CategoryService } from '../../../features/public/services/category.service';
+import { CartService } from '../../../features/checkout-flow/services/cart.service';
 
 @Component({
   selector: 'app-navbar',

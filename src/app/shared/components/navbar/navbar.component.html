@@ -2,7 +2,7 @@
     <p-menubar [model]="items">
 
         <ng-template pTemplate="start">
-            <div class="brand-logo mr-4 cursor-pointer flex align-items-center" routerLink="/">
+            <div class="brand-logo mr-4 cursor-pointer flex align-items-center" routerLink="/products">
                 <i class="pi pi-shopping-bag text-primary text-2xl mr-2"></i>
                 <span class="font-bold text-xl text-900">E-Ticaret</span>
             </div>
@@ -16,12 +16,15 @@
                     <input type="text" pInputText placeholder="Ürün ara..." class="p-inputtext-sm" />
                 </span>
 
-                <p-button icon="pi pi-shopping-cart" [rounded]="true" [text]="true" severity="secondary" pBadge
-                    [value]="cartItemCount.toString()" [badgeDisabled]="cartItemCount === 0" badgeSeverity="danger">
+                <p-button icon="pi pi-shopping-cart" routerLink="/cart" [rounded]="true" [text]="true">
+                    <p-badge *ngIf="cartItemCount > 0" [value]="cartItemCount.toString()" severity="danger"></p-badge>
                 </p-button>
 
-                <p-button label="Giriş Yap" [outlined]="true" size="small"></p-button>
-                <p-button label="Kayıt Ol" size="small"></p-button>
+                <p-button label="Giriş Yap" [outlined]="true" size="small" [routerLink]="['/auth/login']">
+                </p-button>
+
+                <p-button label="Kayıt Ol" size="small" [routerLink]="['/auth/register']">
+                </p-button>
 
             </div>
         </ng-template>

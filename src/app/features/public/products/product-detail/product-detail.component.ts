@@ -50,20 +50,21 @@ export class ProductDetailComponent implements OnInit {
 
 
   addToCart() {
-    if (!this.selectedVariant) return;
+  if (!this.selectedVariant) return;
 
-    // Varsayılan olarak 1 adet ekliyoruz. İstersen arayüze bir miktar (quantity) input'u da koyabilirsin.
-    this.cartService.addToCart(this.selectedVariant.id, 1).subscribe({
-      next: (response) => {
-        console.log('Sepete eklendi!', response);
-        // this.messageService.add({ severity: 'success', summary: 'Başarılı', detail: 'Ürün sepete eklendi.' });
-      },
-      error: (err) => {
-        console.error('Sepete eklenirken hata oluştu', err);
-        // this.messageService.add({ severity: 'error', summary: 'Hata', detail: 'Stok yetersiz veya sunucu hatası.' });
-      }
-    });
-  }
+  // HATA ÇÖZÜMÜ: Parametreleri süslü parantez içine al
+  this.cartService.addToCart({
+    variantId: this.selectedVariant.id,
+    quantity: 1
+  }).subscribe({
+    next: (response) => {
+      console.log('Sepete eklendi!', response);
+    },
+    error: (err) => {
+      console.error('Sepete eklenirken hata oluştu', err);
+    }
+  });
+}
 
   ngOnInit() {
     // URL'deki ID değiştiğinde veriyi otomatik yenileyen yapı

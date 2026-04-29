@@ -1,5 +1,4 @@
-export interface Cart {
-}
+
 export interface CartItemDTO {
   id: string;
   variantId: string;
@@ -16,4 +15,14 @@ export interface CartDTO {
   userId: string;
   items: CartItemDTO[];
   cartTotal: number;
+}
+
+export interface AddToCartRequest {
+  variantId: string;
+  quantity: number;
+}
+
+export interface UpdateCartItemRequest {
+  cartItemId: string;
+  quantity: number;
 }

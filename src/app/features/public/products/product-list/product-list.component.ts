@@ -86,23 +86,27 @@ export class ProductListComponent implements OnInit {
    * Ürünü sepete ekler (Varyant kontrolü ile)
    */
   addToCart(product: any): void {
-    if (!product.variants || product.variants.length === 0) {
-      console.warn('Bu ürünün varyantı bulunmuyor.');
-      return;
-    }
-
-    const defaultVariantId = product.variants[0].id;
-
-    this.cartService.addToCart(defaultVariantId, 1).subscribe({
-      next: (response) => {
-        console.log('Ürün sepete eklendi:', response);
-        // Burada isteğe bağlı olarak PrimeNG MessageService ile Toast gösterilebilir
-      },
-      error: (err) => console.error('Sepete ekleme hatası:', err)
-    });
+  if (!product.variants || product.variants.length === 0) {
+    console.warn('Bu ürünün varyantı bulunmuyor.');
+    return;
   }
 
-  /**
+  // Varsayılan olarak ilk varyantı seçiyoruz
+  const defaultVariantId = product.variants[0].id;
+
+  // HATA ÇÖZÜMÜ: Veriyi obje olarak gönderiyoruz
+  this.cartService.addToCart({
+    variantId: defaultVariantId,
+    quantity: 1
+  }).subscribe({
+    next: (response) => {
+      console.log('Ürün sepete eklendi:', response);
+    },
+    error: (err) => console.error('Sepete ekleme hatası:', err)
+  });
+}
+
+  /**   
    * Sayfa değişim olayını yakalar
    */
   onPageChange(event: any): void {

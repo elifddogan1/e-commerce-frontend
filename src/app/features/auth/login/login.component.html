@@ -1,0 +1,49 @@
+<div class="login-container flex justify-content-center align-items-center min-h-screen surface-ground">
+  <p-card styleClass="w-full sm:w-25rem shadow-4 border-round-xl p-3">
+
+    <div class="text-center mb-5">
+      <i class="pi pi-user text-primary text-5xl mb-3"></i>
+      <div class="text-900 text-3xl font-medium mb-3">Hoş Geldiniz</div>
+      <span class="text-600 font-medium">Hesabınıza giriş yapın</span>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-4">
+
+      <!-- Hata Mesajı -->
+      <p-message *ngIf="errorMessage" severity="error" [text]="errorMessage" styleClass="w-full"></p-message>
+
+      <div class="flex flex-column gap-2">
+        <label htmlFor="email" class="font-bold text-900">E-posta</label>
+        <input pInputText id="email" formControlName="email" type="email" placeholder="E-posta adresiniz" class="w-full"
+          [ngClass]="{'ng-invalid ng-dirty': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}" />
+        <small class="p-error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          Geçerli bir e-posta giriniz.
+        </small>
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label htmlFor="password" class="font-bold text-900">Şifre</label>
+        <p-password id="password" formControlName="password" [toggleMask]="true" [feedback]="false"
+          placeholder="Şifreniz" styleClass="w-full" [inputStyle]="{'width':'100%'}"
+          [ngClass]="{'ng-invalid ng-dirty': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+        </p-password>
+        <small class="p-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          Şifre en az 6 karakter olmalıdır.
+        </small>
+      </div>
+
+      <p-button label="Giriş Yap" icon="pi pi-sign-in" styleClass="w-full mt-2" type="submit" [loading]="isLoading"
+        [disabled]="loginForm.invalid && loginForm.touched">
+      </p-button>
+    </form>
+
+    <div class="text-center mt-4">
+      <span class="text-600 font-medium line-height-3">Hesabınız yok mu?</span>
+      <a routerLink="/auth/register"
+        class="font-medium no-underline ml-2 text-primary cursor-pointer transition-colors transition-duration-150 hover:text-primary-hover">
+        Hemen Kayıt Olun
+      </a>
+    </div>
+
+  </p-card>
+</div>
