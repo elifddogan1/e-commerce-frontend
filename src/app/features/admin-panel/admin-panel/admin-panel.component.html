@@ -1,0 +1,53 @@
+<div class="admin-layout">
+    <!-- Modern Light Glass Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-glass">
+
+            <div class="brand">
+                <div class="logo-box">
+                    <i class="pi pi-shield"></i>
+                </div>
+                <div class="brand-info">
+                    <span class="brand-name">ADMIN<span>CORE</span></span>
+                    <span class="brand-subtitle">Yönetim Paneli</span>
+                </div>
+            </div>
+
+            <nav class="navigation">
+                <p-menu [model]="menuItems" styleClass="admin-light-menu"></p-menu>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-logout" (click)="logout()">
+                    <i class="pi pi-power-off"></i>
+                    <span>Oturumu Kapat</span>
+                </button>
+            </div>
+
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-body">
+        <header class="top-nav-glass">
+            <div class="top-nav-content">
+                <div class="page-info">
+                    <i class="pi pi-th-large"></i>
+                    <span>Kontrol Merkezi</span>
+                </div>
+
+                <div class="admin-profile">
+                    <div class="profile-text">
+                        <span class="admin-name">Elif Admin</span>
+                        <span class="admin-role">Süper Yetkili</span>
+                    </div>
+                    <div class="avatar">E</div>
+                </div>
+            </div>
+        </header>
+
+        <section class="router-container">
+            <router-outlet></router-outlet>
+        </section>
+    </main>
+</div>

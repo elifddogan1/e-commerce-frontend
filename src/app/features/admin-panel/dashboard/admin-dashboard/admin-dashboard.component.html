@@ -1,0 +1,89 @@
+<div class="page-wrapper">
+    <div class="dashboard-container">
+
+        <header class="page-header">
+            <div class="header-content">
+                <h1>Sistem Özeti</h1>
+                <p>Platformun genel performansı ve aktif verileri.</p>
+            </div>
+            <div class="admin-badge">
+                <i class="pi pi-shield"></i>
+                <span>Yönetici Paneli</span>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" *ngIf="stats">
+
+            <!-- Toplam Kullanıcı -->
+            <div class="glass-card stat-card">
+                <div class="stat-icon icon-blue">
+                    <i class="pi pi-users"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="label">Toplam Kullanıcı</span>
+                    <span class="value">{{stats.totalUsers}}</span>
+                </div>
+            </div>
+
+            <!-- Toplam Satıcı -->
+            <div class="glass-card stat-card">
+                <div class="stat-icon icon-purple">
+                    <i class="pi pi-briefcase"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="label">Aktif Satıcılar</span>
+                    <span class="value">{{stats.totalSellers}}</span>
+                </div>
+            </div>
+
+            <!-- Onay Bekleyenler -->
+            <div class="glass-card stat-card highlight-orange">
+                <div class="stat-icon icon-orange">
+                    <i class="pi pi-user-plus"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="label">Onay Bekleyenler</span>
+                    <span class="value">{{stats.pendingSellers}}</span>
+                </div>
+                <div class="card-hint">Aksiyon Gerekli</div>
+            </div>
+
+            <!-- Toplam Sipariş -->
+            <div class="glass-card stat-card">
+                <div class="stat-icon icon-green">
+                    <i class="pi pi-shopping-cart"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="label">Toplam Sipariş</span>
+                    <span class="value">{{stats.totalOrders}}</span>
+                </div>
+            </div>
+
+            <!-- Aktif Ürünler -->
+            <div class="glass-card stat-card">
+                <div class="stat-icon icon-indigo">
+                    <i class="pi pi-box"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="label">Aktif Ürünler</span>
+                    <span class="value">{{stats.totalProducts}}</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Karşılama Kartı ve Gelecek Grafikler -->
+        <div class="bottom-section mt-8">
+            <div class="glass-panel welcome-panel">
+                <div class="welcome-text">
+                    <h2>Tekrar Hoş Geldin, Admin!</h2>
+                    <p>Sistemde her şey yolunda görünüyor. Şu anda onay bekleyen
+                        <strong>{{stats?.pendingSellers}}</strong> yeni satıcı başvurusu var.</p>
+                </div>
+                <button class="btn-primary">Başvuruları İncele</button>
+            </div>
+        </div>
+
+    </div>
+</div>

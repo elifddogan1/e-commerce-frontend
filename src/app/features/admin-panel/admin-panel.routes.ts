@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { AdminPanelComponent } from './admin-panel.component';
-import { AdminDashboardComponent } from './dashboard/admin-dashboard.component';
-import { CategoryManagementComponent } from './categories/category-management.component';
-import { SellerApprovalComponent } from './seller-approvals/seller-approval.component';
+import { AdminDashboardComponent } from './dashboard/admin-dashboard/admin-dashboard.component';
+import { SellerApprovalComponent } from './seller-approvals/seller-approval/seller-approval.component';
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { CategoryManagementComponent } from './categories/category-management/category-management.component';
 
 export const ADMIN_PANEL_ROUTES: Routes = [
   {

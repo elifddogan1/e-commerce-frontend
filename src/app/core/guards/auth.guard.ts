@@ -28,9 +28,16 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   // --- 2. DURUM: GİRİŞ YAPILMIŞ ---
 
-  // Dinamik Yönlendirme Rotası: Satıcıysa kendi paneline, değilse anasayfaya (ürünlere) at.
-  const isSeller = userRole.includes('SELLER');
-  const defaultRedirect = isSeller ? '/seller-panel/dashboard' : '/products';
+  // ÇÖZÜM: Her rol için doğru varsayılan yönlendirme adresini belirliyoruz.
+  let defaultRedirect = '/products'; // Normal USER için varsayılan
+
+  if (userRole.includes('SELLER')) {
+    defaultRedirect = '/seller-panel/dashboard';
+  } else if (userRole.includes('ADMIN')) {
+    // Admin yetkisine sahip kullanıcılar için varsayılan rotayı Admin Paneli yapıyoruz.
+    // Not: Admin modülündeki anasayfa rotan neyse ona göre burayı güncelleyebilirsin (örn: '/admin')
+    defaultRedirect = '/admin/dashboard';
+  }
 
   // Zaten login olan biri Login/Register sayfasına girmeye çalışırsa engelle
   if (isAuthPage) {

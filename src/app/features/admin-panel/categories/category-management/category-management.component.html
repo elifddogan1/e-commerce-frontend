@@ -1,0 +1,104 @@
+<p-toast></p-toast>
+
+<div class="page-wrapper">
+    <div class="glass-panel">
+
+        <header class="panel-header">
+            <div class="header-content">
+                <h2>Kategori Yönetimi</h2>
+                <p>Ürün hiyerarşisini ve ana/alt kategorileri düzenleyin.</p>
+            </div>
+            <button class="btn-primary" (click)="showAddDialog()">
+                <i class="pi pi-plus"></i>
+                <span>Yeni Kategori</span>
+            </button>
+        </header>
+
+        <div class="table-container">
+            <p-table [value]="categories" [rows]="10" [paginator]="true" [loading]="loading"
+                styleClass="custom-glass-table">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Kategori Adı</th>
+                        <th>Açıklama</th>
+                        <th>Üst Kategori</th>
+                        <th class="text-right">İşlemler</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-category>
+                    <tr class="table-row">
+                        <td>
+                            <div class="category-cell">
+                                <i class="pi" [ngClass]="category.parentId ? 'pi-directions' : 'pi-folder'"></i>
+                                <span>{{ category.name }}</span>
+                            </div>
+                        </td>
+                        <td class="desc-cell">{{ category.description || 'Açıklama yok' }}</td>
+                        <td>
+                            <span class="parent-badge" [class.main]="!category.parentId">
+                                {{ getCategoryName(category.parentId) }}
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <button class="btn-icon delete" (click)="deleteCategory(category.id)" title="Sil">
+                                <i class="pi pi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="4">
+                            <div class="empty-state">
+                                <i class="pi pi-tags"></i>
+                                <p>Henüz bir kategori tanımlanmamış.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </div>
+</div>
+
+<!-- Kategori Ekleme Diyaloğu -->
+<p-dialog [(visible)]="displayDialog" header="Kategori Detayları" [modal]="true" [draggable]="false" [resizable]="false"
+    styleClass="custom-dialog">
+
+    <div class="dialog-form">
+        <div class="input-group">
+            <label>Kategori Adı</label>
+            <input type="text" pInputText [(ngModel)]="newCategory.name" placeholder="Örn: Elektronik" />
+        </div>
+
+        <div class="input-group">
+            <label>Açıklama</label>
+            <textarea pInputTextarea [(ngModel)]="newCategory.description" rows="3"
+                placeholder="Kategori hakkında kısa bilgi..."></textarea>
+        </div>
+
+        <div class="input-group">
+            <label>Üst Kategori (Opsiyonel)</label>
+            <div class="select-wrapper">
+                <select [(ngModel)]="newCategory.parentId">
+                    <option [value]="undefined">Ana Kategori (Yok)</option>
+                    <option *ngFor="let cat of mainCategories" [value]="cat.id">{{ cat.name }}</option>
+                </select>
+                <i class="pi pi-chevron-down"></i>
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="dialog-actions">
+            <button class="btn-text" (click)="displayDialog = false">İptal</button>
+            <button class="btn-save" (click)="saveCategory()">
+                <i class="pi pi-check"></i> Kategoriyi Kaydet
+            </button>
+        </div>
+    </ng-template>
+</p-dialog>

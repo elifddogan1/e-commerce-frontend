@@ -1,0 +1,78 @@
+<p-toast></p-toast>
+
+<div class="page-wrapper">
+    <div class="glass-panel">
+
+        <header class="panel-header">
+            <div class="header-content">
+                <h2>Satıcı Başvuruları</h2>
+                <p>Mağaza açmak isteyen kullanıcıların bekleyen onay talepleri.</p>
+            </div>
+            <div class="status-count" *ngIf="!loading">
+                <b>{{ pendingSellers.length }}</b> Bekleyen Başvuru
+            </div>
+        </header>
+
+        <div class="table-container">
+            <p-table [value]="pendingSellers" [rows]="10" [paginator]="true" [loading]="loading"
+                styleClass="custom-glass-table">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Ad Soyad</th>
+                        <th>E-Posta</th>
+                        <th>Mağaza Adı</th>
+                        <th>Kayıt Tarihi</th>
+                        <th class="text-right">Aksiyonlar</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-seller>
+                    <tr class="table-row">
+                        <td>
+                            <div class="user-cell">
+                                <div class="avatar">{{ seller.firstName.charAt(0) }}</div>
+                                <span>{{ seller.firstName }} {{ seller.lastName }}</span>
+                            </div>
+                        </td>
+                        <td class="email-cell">{{ seller.email }}</td>
+                        <td>
+                            <span class="store-badge">
+                                <i class="pi pi-store"></i>
+                                {{ seller.store?.name || 'Belirtilmedi' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="date-cell">
+                                <span class="date">{{ seller.createdAt | date:'mediumDate' }}</span>
+                                <span class="time text-xs">{{ seller.createdAt | date:'shortTime' }}</span>
+                            </div>
+                        </td>
+                        <td class="text-right">
+                            <div class="action-buttons">
+                                <button class="btn-approve" (click)="approveSeller(seller.id)" title="Onayla">
+                                    <i class="pi pi-check"></i> Onayla
+                                </button>
+                                <button class="btn-decline" (click)="deactivateSeller(seller.id)" title="Reddet">
+                                    <i class="pi pi-times"></i> Reddet
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <i class="pi pi-verified"></i>
+                                <p>Şu an onay bekleyen herhangi bir başvuru bulunmuyor.</p>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </div>
+</div>

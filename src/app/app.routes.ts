@@ -1,15 +1,21 @@
 import { Routes } from '@angular/router';
-import { MyAddressesComponent } from './features/user-panel/my-addresses/my-addresses/my-addresses.component';
-
-// Bileşen Importları
-import { ProductListComponent } from './features/public/products/product-list/product-list.component';
-import { ProductDetailComponent } from './features/public/products/product-detail/product-detail.component';
-import { CartComponent } from './features/checkout-flow/cart/cart/cart.component';
-import { CheckoutPageComponent } from './features/checkout-flow/pages/checkout-page/checkout-page.component';
-
-// Core & Guard
+import { AUTH_ROUTES } from 'src/app/features/auth/auth.routes';
+import { CartComponent } from 'src/app/features/checkout-flow/cart/cart/cart.component';
+import { CheckoutPageComponent } from 'src/app/features/checkout-flow/pages/checkout-page/checkout-page.component';
+import { ProductDetailComponent } from 'src/app/features/public/products/product-detail/product-detail.component';
+import { ProductListComponent } from 'src/app/features/public/products/product-list/product-list.component';
+import { MyAddressesComponent } from 'src/app/features/user-panel/my-addresses/my-addresses/my-addresses.component';
+// import { MyAddressesComponent} from './features/user-panel/m
 import { authGuard } from './core/guards/auth.guard';
-import { AUTH_ROUTES } from './features/auth/auth.routes';
+// // Bileşen Importları
+// import { ProductListComponent } from './features/public/products/product-list/product-list.component';
+// import { ProductDetailComponent } from './features/public/products/product-detail/product-detail.component';
+// import { CartComponent } from './features/checkout-flow/cart/cart/cart.component';
+// import { CheckoutPageComponent } from './features/checkout-flow/pages/checkout-page/checkout-page.component';
+
+// // Core & Guard
+// import { authGuard } from './core.*';
+// import { AUTH_ROUTES } from './features/auth/auth.routes';
 
 export const routes: Routes = [
   {
@@ -93,4 +99,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'products'
   }
-];
+];        
