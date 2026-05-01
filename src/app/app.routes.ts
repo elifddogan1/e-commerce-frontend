@@ -68,6 +68,14 @@ export const routes: Routes = [
       // Gelecekte my-orders gibi sayfalar buraya eklenecek
     ]
   },
+  
+  // Satıcı Paneli (SADECE giriş yapmış SELLER rolü girebilir)
+  {
+    path: 'seller-panel',
+    canActivate: [authGuard],
+    data: { requiredRoles: ['SELLER'] },
+    loadChildren: () => import('./features/seller-panel/seller-panel.routes').then(m => m.SELLER_PANEL_ROUTES)
+  },
 
   // Hatalı rotaları anasayfaya at
   {

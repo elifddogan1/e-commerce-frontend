@@ -32,6 +32,17 @@
                         [routerLink]="['/profile']">
                     </p-button>
 
+                    @if (authService.isSeller()) {
+                      <p-button
+                          label="Mağazam"
+                          icon="pi pi-store"
+                          [outlined]="true"
+                          severity="success"
+                          size="small"
+                          [routerLink]="['/seller-panel']">
+                      </p-button>
+                    }
+
                     <p-button
                         label="Çıkış Yap"
                         icon="pi pi-sign-out"

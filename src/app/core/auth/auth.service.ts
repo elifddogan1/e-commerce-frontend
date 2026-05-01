@@ -52,6 +52,13 @@ export class AuthService {
     return !isSellerOrAdmin;
   });
 
+  isSeller = computed(() => {
+    const role = this.userRole();
+    if (!role) return false;
+    const roleString = typeof role === 'string' ? role.toUpperCase() : JSON.stringify(role).toUpperCase();
+    return roleString.includes('SELLER');
+  });
+
   private getInitialToken(): string | null {
     if (isPlatformBrowser(this.platformId)) {
       return localStorage.getItem('token');
