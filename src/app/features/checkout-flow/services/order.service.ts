@@ -1,8 +1,8 @@
 // core/services/order.service.ts
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface CheckoutRequest {
   shippingAddressId: string;
@@ -15,9 +15,9 @@ export class OrderService {
 
   // 1. Müşteri Siparişi Tamamlar
   // features/checkout-flow/services/order.service.ts
-checkout(request: { shippingAddressId: string }): Observable<any> {
-  return this.http.post<any>(`${this.apiUrl}/checkout`, request);
-}
+  checkout(request: { shippingAddressId: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/checkout`, request);
+  }
 
   // 2. Müşteri Kendi Siparişlerini Görür
   getMyOrders(): Observable<any[]> {
