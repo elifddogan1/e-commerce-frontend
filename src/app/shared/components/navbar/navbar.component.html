@@ -1,73 +1,57 @@
-<div class="navbar-wrapper shadow-2">
-  <p-menubar [model]="items">
+<div class="navbar-container">
+    <p-menubar [model]="items" styleClass="custom-menubar">
 
-      <ng-template pTemplate="start">
-          <div class="brand-logo mr-4 cursor-pointer flex align-items-center" routerLink="/products">
-              <i class="pi pi-shopping-bag text-primary text-2xl mr-2"></i>
-              <span class="font-bold text-xl text-900">E-Ticaret</span>
-          </div>
-      </ng-template>
+        <!-- LOGO Bölümü -->
+        <ng-template pTemplate="start">
+            <div class="brand" [routerLink]="authService.isSeller() ? '/seller-panel/dashboard' : '/products'">
+                <div class="logo-icon">
+                    <i class="pi pi-bolt"></i>
+                </div>
+                <span class="brand-text">FILE STORE</span>
+            </div>
+        </ng-template>
 
-      <ng-template pTemplate="end">
-          <div class="flex align-items-center gap-3">
+        <!-- SAĞ TARAF (Arama, Sepet, Profil) -->
+        <ng-template pTemplate="end">
+            <div class="nav-actions">
 
-              <span class="p-input-icon-left hidden md:block">
-                  <i class="pi pi-search"></i>
-                  <input type="text" pInputText placeholder="Ürün ara..." class="p-inputtext-sm" />
-              </span>
+                <!-- Arama (Müşteriler için) -->
+                <div class="search-box" *ngIf="!authService.isSeller()">
+                    <i class="pi pi-search"></i>
+                    <input type="text" pInputText placeholder="Ürün ara..." class="p-inputtext-sm" />
+                </div>
 
-              @if (authService.showCartIcon()) {
-                <p-button icon="pi pi-shopping-cart" routerLink="/cart" [rounded]="true" [text]="true">
-                    <p-badge *ngIf="cartItemCount > 0" [value]="cartItemCount.toString()" severity="danger"></p-badge>
-                </p-button>
-              }
+                <!-- Sepet -->
+                <div class="cart-wrapper" *ngIf="authService.showCartIcon()">
+                    <button class="nav-btn-icon" routerLink="/cart">
+                        <i class="pi pi-shopping-cart"></i>
+                        <span class="cart-badge" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
+                    </button>
+                </div>
 
-              <div class="flex gap-2">
-                @if (authService.isLoggedIn()) {
-                    <p-button
-                        label="Profilim"
-                        icon="pi pi-user"
-                        [outlined]="true"
-                        size="small"
-                        [routerLink]="['/profile']">
-                    </p-button>
+                <!-- Kullanıcı İşlemleri -->
+                <div class="auth-group">
+                    <ng-container *ngIf="authService.isLoggedIn(); else guestButtons">
 
-                    @if (authService.isSeller()) {
-                      <p-button
-                          label="Mağazam"
-                          icon="pi pi-store"
-                          [outlined]="true"
-                          severity="success"
-                          size="small"
-                          [routerLink]="['/seller-panel']">
-                      </p-button>
-                    }
+                        <button class="nav-btn-profile"
+                            [routerLink]="authService.isSeller() ? '/seller-panel/dashboard' : '/profile'">
+                            <i [class]="authService.isSeller() ? 'pi pi-store' : 'pi pi-user'"></i>
+                            <span class="hidden-mobile">{{ authService.isSeller() ? 'Panelim' : 'Profilim' }}</span>
+                        </button>
 
-                    <p-button
-                        label="Çıkış Yap"
-                        icon="pi pi-sign-out"
-                        severity="danger"
-                        size="small"
-                        (onClick)="authService.logout()">
-                    </p-button>
-                } @else {
-                    <p-button
-                        label="Giriş Yap"
-                        [outlined]="true"
-                        size="small"
-                        [routerLink]="['/auth/login']">
-                    </p-button>
+                        <button class="nav-btn-logout" (click)="authService.logout()">
+                            <i class="pi pi-sign-out"></i>
+                        </button>
 
-                    <p-button
-                        label="Kayıt Ol"
-                        size="small"
-                        [routerLink]="['/auth/register']">
-                    </p-button>
-                }
-              </div>
+                    </ng-container>
 
-          </div>
-      </ng-template>
+                    <ng-template #guestButtons>
+                        <button class="btn-login" [routerLink]="['/auth/login']">Giriş</button>
+                        <button class="btn-register" [routerLink]="['/auth/register']">Kayıt Ol</button>
+                    </ng-template>
+                </div>
 
-  </p-menubar>
+            </div>
+        </ng-template>
+    </p-menubar>
 </div>

@@ -1,0 +1,311 @@
+// --- Renk Paleti ve Değişkenler ---
+$primary-blue: #3b82f6;
+$primary-purple: #8b5cf6;
+$gradient: linear-gradient(135deg, $primary-blue 0%, $primary-purple 100%);
+$glass-bg: rgba(255, 255, 255, 0.7);
+$glass-border: rgba(255, 255, 255, 0.5);
+$text-main: #1e293b;
+$text-muted: #64748b;
+
+// Sayfa Arka Planı (Ürün ekleme sayfasıyla aynı)
+.page-wrapper {
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%);
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+// Başlık
+.dashboard-header {
+    margin-bottom: 2.5rem;
+
+    h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: $gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        color: $text-muted;
+        font-size: 1.1rem;
+    }
+}
+
+// Ortak Cam Efekti Sınıfı
+.glass-card {
+    background: $glass-bg;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid $glass-border;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    padding: 1.5rem;
+}
+
+// İstatistik Kartları Grid Yapısı
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.stat-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .card-header {
+        margin-bottom: 1rem;
+    }
+
+    h3 {
+        color: $text-muted;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: $text-main;
+
+        &.highlight-green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    }
+}
+
+// Rozetler (Badges)
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+
+    i {
+        font-size: 0.8rem;
+    }
+
+    &.badge-green {
+        background: #d1fae5;
+        color: #059669;
+    }
+
+    &.badge-blue {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    &.badge-orange {
+        background: #ffedd5;
+        color: #ea580c;
+    }
+
+    &.badge-purple {
+        background: #f3e8ff;
+        color: #9333ea;
+    }
+}
+
+// Alt Grid (Hızlı Bağlantılar vb.)
+.bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+
+    @media (min-width: 768px) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    // Yarı yarıya bölmek için
+}
+
+.links-card {
+    h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: $text-main;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+}
+
+.links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.link-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid transparent;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: $text-main;
+    font-weight: 600;
+
+    .link-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: $gradient;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+    }
+
+    .arrow {
+        margin-left: auto;
+        color: $text-muted;
+        transition: transform 0.2s;
+    }
+
+    &:hover {
+        background: white;
+        border-color: $primary-blue;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        color: $primary-blue;
+
+        .arrow {
+            transform: translateX(5px);
+            color: $primary-blue;
+        }
+    }
+}
+
+// --- Skeleton Loading Animasyonları ---
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+
+    100% {
+        background-position: 468px 0;
+    }
+}
+
+.skeleton {
+    &>div {
+        background: #f6f7f8;
+        background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+        background-repeat: no-repeat;
+        background-size: 800px 100%;
+        animation-duration: 1.5s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+        animation-name: shimmer;
+        animation-timing-function: linear;
+        border-radius: 8px;
+    }
+
+    .skeleton-badge {
+        width: 70px;
+        height: 24px;
+        margin-bottom: 2rem;
+    }
+
+    .skeleton-title {
+        width: 100px;
+        height: 16px;
+        margin-bottom: 1rem;
+    }
+
+    .skeleton-value {
+        width: 140px;
+        height: 32px;
+    }
+}
+
+// Önceki SCSS değişkenleri aynen kalıyor...
+
+.stat-card.interactive {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    // Sağ üstteki minik link oku
+    .link-icon-mini {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        font-size: 0.8rem;
+        color: $text-muted;
+        opacity: 0;
+        transition: all 0.3s ease;
+        transform: translate(-5px, 5px);
+    }
+
+    &:hover {
+        transform: translateY(-8px) scale(1.02);
+        border-color: $primary-blue;
+        background: rgba(255, 255, 255, 0.95);
+
+        .link-icon-mini {
+            opacity: 1;
+            transform: translate(0, 0);
+            color: $primary-blue;
+        }
+
+        // Badge'i biraz canlandıralım
+        .badge {
+            filter: brightness(0.95);
+            transform: scale(1.05);
+        }
+    }
+
+    // Tıklama anı efekti
+    &:active {
+        transform: translateY(-4px) scale(0.98);
+        transition: all 0.1s;
+    }
+}
+
+// Kart içindeki header düzenlemesi
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+// Badge geçiş efekti
+.badge {
+    transition: all 0.3s ease;
+}

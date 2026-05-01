@@ -1,0 +1,268 @@
+$primary-blue: #3b82f6;
+$primary-purple: #8b5cf6;
+$gradient: linear-gradient(135deg, $primary-blue 0%, $primary-purple 100%);
+$glass-bg: rgba(255, 255, 255, 0.85);
+$text-main: #1e293b;
+$text-muted: #64748b;
+
+.page-wrapper {
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #f0f4ff 0%, #f5f3ff 100%);
+    display: flex;
+    justify-content: center;
+}
+
+.glass-panel {
+    width: 100%;
+    max-width: 1100px;
+    background: $glass-bg;
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+
+    h2 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        background: $gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    p {
+        color: $text-muted;
+        margin-top: 0.3rem;
+    }
+}
+
+// Tablo Konteyner
+.table-container {
+    overflow-x: auto;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+
+    thead tr {
+        background: rgba(255, 255, 255, 0.6);
+        border-bottom: 2px solid #edf2f7;
+
+        th {
+            padding: 1.2rem;
+            font-weight: 700;
+            color: $text-main;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+    }
+
+    tbody tr {
+        border-bottom: 1px solid #edf2f7;
+        transition: all 0.2s;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.002);
+        }
+
+        td {
+            padding: 1.2rem;
+        }
+    }
+}
+
+// Ürün Bilgisi
+.product-info {
+    display: flex;
+    flex-direction: column;
+
+    .product-name {
+        font-weight: 600;
+        color: $text-main;
+    }
+
+    .product-id {
+        font-size: 0.75rem;
+        color: $text-muted;
+    }
+}
+
+.price-tag {
+    font-weight: 700;
+    color: $primary-blue;
+}
+
+// Status Badge (Aktif/Pasif)
+.status-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+
+    &.active {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    &.passive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+}
+
+// İşlem Butonları
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &.edit {
+        background: #eff6ff;
+        color: $primary-blue;
+
+        &:hover {
+            background: $primary-blue;
+            color: white;
+        }
+    }
+
+    &.delete {
+        background: #fef2f2;
+        color: #ef4444;
+
+        &:hover {
+            background: #ef4444;
+            color: white;
+        }
+    }
+}
+
+// Pagination
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #edf2f7;
+    color: $text-muted;
+}
+
+.btn-page {
+    background: white;
+    border: 1px solid #e2e8f0;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+        border-color: $primary-purple;
+        color: $primary-purple;
+    }
+}
+
+.page-info {
+    font-size: 0.9rem;
+    margin: 0 1rem;
+
+    b {
+        color: $text-main;
+    }
+}
+
+// Butonlar
+.btn-primary {
+    background: $gradient;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(59, 130, 246, 0.2);
+    transition: transform 0.2s;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+
+// Boş Durum
+.empty-state {
+    text-align: center;
+    padding: 4rem;
+
+    i {
+        font-size: 4rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    p {
+        color: $text-muted;
+        margin-bottom: 1.5rem;
+    }
+}
+
+.loading-state {
+    text-align: center;
+    padding: 3rem;
+
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border-left-color: $primary-blue;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

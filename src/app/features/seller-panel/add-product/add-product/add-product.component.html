@@ -1,0 +1,84 @@
+<div class="page-wrapper">
+    <div class="glass-panel">
+        <div class="panel-header">
+            <h2>Yeni Ürün Ekle</h2>
+            <p>Kataloğunuza yeni bir ürün ekleyin</p>
+        </div>
+
+        <form [formGroup]="productForm" (ngSubmit)="submit()" class="custom-form">
+
+            <!-- Temel Bilgiler -->
+            <div class="form-grid">
+                <div class="input-group">
+                    <!-- Etiketlerin input doluyken yukarı çıkması için "required" özelliği CSS seçicilerinde kullanılıyor -->
+                    <input type="text" formControlName="name" required>
+                    <label>Ürün Adı*</label>
+                    <span class="bar"></span>
+                </div>
+
+                <div class="input-group">
+                    <input type="number" formControlName="basePrice" required>
+                    <label>Taban Fiyat (₺)*</label>
+                    <span class="bar"></span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <textarea formControlName="description" rows="3" required></textarea>
+                <label>Açıklama*</label>
+                <span class="bar"></span>
+            </div>
+
+            <div class="input-group select-group">
+                <select formControlName="categoryId" required>
+                    <option [value]="null" disabled selected></option>
+                    <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+                </select>
+                <label>Kategori*</label>
+                <span class="bar"></span>
+            </div>
+
+            <!-- Varyantlar -->
+            <div class="variants-section" formArrayName="variants">
+                <div class="section-header">
+                    <h3>Ürün Varyantları</h3>
+                    <button type="button" class="btn-outline" (click)="addVariant()">+ Yeni Varyant</button>
+                </div>
+
+                <div class="variant-card" *ngFor="let v of variants.controls; let i = index" [formGroupName]="i">
+                    <div class="variant-input">
+                        <input type="text" formControlName="name" placeholder="Renk/Beden" required>
+                    </div>
+                    <div class="variant-input">
+                        <input type="text" formControlName="sku" placeholder="SKU Kodu" required>
+                    </div>
+                    <div class="variant-input">
+                        <input type="number" formControlName="price" placeholder="Fiyat" required>
+                    </div>
+                    <div class="variant-input">
+                        <input type="number" formControlName="stockQuantity" placeholder="Stok" required>
+                    </div>
+                    <button type="button" class="btn-remove" (click)="removeVariant(i)" title="Varyantı Sil">✕</button>
+                </div>
+
+                <div *ngIf="variants.length === 0" class="empty-variants">
+                    Henüz varyant eklenmedi. (Opsiyonel)
+                </div>
+            </div>
+
+            <!-- Görsel Yükleme -->
+            <div class="file-upload">
+                <input type="file" multiple (change)="onFileChange($event)" id="file-upload">
+                <label for="file-upload" class="upload-label">
+                    <i class="pi pi-cloud-upload"></i>
+                    <span>Görselleri Seçin veya Sürükleyin</span>
+                </label>
+                <div class="file-count" *ngIf="selectedFiles.length">{{ selectedFiles.length }} dosya seçildi.</div>
+            </div>
+
+            <button type="submit" class="btn-submit" [disabled]="productForm.invalid || isSubmitting">
+                {{ isSubmitting ? 'İşleniyor...' : 'Ürünü Kaydet ve Yayınla' }}
+            </button>
+        </form>
+    </div>
+</div>

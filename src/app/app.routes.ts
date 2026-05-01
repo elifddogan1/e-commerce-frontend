@@ -1,7 +1,7 @@
-import { MyAddressesComponent } from './features/user-panel/my-addresses/my-addresses/my-addresses.component';
 import { Routes } from '@angular/router';
+import { MyAddressesComponent } from './features/user-panel/my-addresses/my-addresses/my-addresses.component';
 
-// Bileşen Importları (Feature bazlı)
+// Bileşen Importları
 import { ProductListComponent } from './features/public/products/product-list/product-list.component';
 import { ProductDetailComponent } from './features/public/products/product-detail/product-detail.component';
 import { CartComponent } from './features/checkout-flow/cart/cart/cart.component';
@@ -18,25 +18,29 @@ export const routes: Routes = [
     redirectTo: 'products'
   },
 
-  // Public (Herkes görebilir)
+  // Public Ürünler (SELLER GİREMEZ)
   {
     path: 'products',
     title: 'Ürünler | E-Ticaret',
-    component: ProductListComponent
+    component: ProductListComponent,
+    canActivate: [authGuard],
+    data: { forbiddenRoles: ['SELLER'] } // Satıcılar kendi paneline yönlendirilmeli
   },
   {
     path: 'products/:id',
     title: 'Ürün Detayı | E-Ticaret',
-    component: ProductDetailComponent
+    component: ProductDetailComponent,
+    canActivate: [authGuard],
+    data: { forbiddenRoles: ['SELLER'] }
   },
 
-  // Auth (Giriş/Kayıt - auth.routes içindeki alt rotalar)
+  // Auth
   {
     path: 'auth',
-    children: AUTH_ROUTES // AUTH_ROUTES'u yukarıda import ettik
+    children: AUTH_ROUTES
   },
 
-  // Sepet (Misafir girebilir, ama SELLER/ADMIN giremez)
+  // Sepet
   {
     path: 'cart',
     title: 'Sepetim | E-Ticaret',
@@ -45,7 +49,7 @@ export const routes: Routes = [
     data: { forbiddenRoles: ['SELLER', 'ADMIN'] }
   },
 
-  // Checkout (SADECE giriş yapmış USER rolü girebilir)
+  // Checkout 
   {
     path: 'checkout',
     title: 'Siparişi Tamamla | E-Ticaret',
@@ -54,7 +58,7 @@ export const routes: Routes = [
     data: { requiredRoles: ['USER'] }
   },
 
-  // Kullanıcı Paneli (SADECE giriş yapmış USER rolü girebilir)
+  // Kullanıcı Paneli
   {
     path: 'user-panel',
     canActivate: [authGuard],
@@ -64,12 +68,11 @@ export const routes: Routes = [
         path: 'my-addresses',
         title: 'Adreslerim | E-Ticaret',
         component: MyAddressesComponent
-      },
-      // Gelecekte my-orders gibi sayfalar buraya eklenecek
+      }
     ]
   },
-  
-  // Satıcı Paneli (SADECE giriş yapmış SELLER rolü girebilir)
+
+  // Satıcı Paneli
   {
     path: 'seller-panel',
     canActivate: [authGuard],
@@ -77,7 +80,6 @@ export const routes: Routes = [
     loadChildren: () => import('./features/seller-panel/seller-panel.routes').then(m => m.SELLER_PANEL_ROUTES)
   },
 
-  // Hatalı rotaları anasayfaya at
   {
     path: '**',
     redirectTo: 'products'

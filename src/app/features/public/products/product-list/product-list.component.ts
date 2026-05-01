@@ -36,17 +36,14 @@ import { TooltipModule } from 'primeng/tooltip';
   styleUrls: ['./product-list.component.scss']
 })
 export class ProductListComponent implements OnInit {
-  // Bağımlılıklar (Inject)
   private productService = inject(ProductService);
   private cartService = inject(CartService);
-  private cdr = inject(ChangeDetectorRef); // Hata çözümü için kritik
+  private cdr = inject(ChangeDetectorRef);
 
-  // State (Durum) Değişkenleri
   products: ProductDTO[] = [];
   totalElements: number = 0;
-  loading: boolean = true; // Başlangıç değeri true kalsın
+  loading: boolean = true;
 
-  // Sayfalama Ayarları
   currentPage: number = 0;
   pageSize: number = 12;
 
@@ -54,13 +51,8 @@ export class ProductListComponent implements OnInit {
     this.loadProducts();
   }
 
-  /**
-   * Ürünleri API'den çeker ve state'i günceller
-   */
   loadProducts(): void {
     this.loading = true;
-
-    // Değer değişimini Angular'a hemen bildir (NG0100 hatasını engeller)
     this.cdr.detectChanges();
 
     this.productService.getProducts(this.currentPage, this.pageSize)
@@ -71,54 +63,37 @@ export class ProductListComponent implements OnInit {
             this.totalElements = response.totalElements;
           }
           this.loading = false;
-          // Veri geldikten sonra ekranı tekrar güncelle
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Ürünler yüklenirken hata:', err);
+          console.error('Hata:', err);
           this.loading = false;
           this.cdr.detectChanges();
         }
       });
   }
 
-  /**
-   * Ürünü sepete ekler (Varyant kontrolü ile)
-   */
   addToCart(product: any): void {
-  if (!product.variants || product.variants.length === 0) {
-    console.warn('Bu ürünün varyantı bulunmuyor.');
-    return;
+    if (!product.variants || product.variants.length === 0) return;
+
+    const defaultVariantId = product.variants[0].id;
+
+    this.cartService.addToCart({
+      variantId: defaultVariantId,
+      quantity: 1
+    }).subscribe({
+      next: () => console.log('Sepete eklendi'),
+      error: (err) => console.error(err)
+    });
   }
 
-  // Varsayılan olarak ilk varyantı seçiyoruz
-  const defaultVariantId = product.variants[0].id;
-
-  // HATA ÇÖZÜMÜ: Veriyi obje olarak gönderiyoruz
-  this.cartService.addToCart({
-    variantId: defaultVariantId,
-    quantity: 1
-  }).subscribe({
-    next: (response) => {
-      console.log('Ürün sepete eklendi:', response);
-    },
-    error: (err) => console.error('Sepete ekleme hatası:', err)
-  });
-}
-
-  /**   
-   * Sayfa değişim olayını yakalar
-   */
   onPageChange(event: any): void {
     this.currentPage = event.page;
     this.pageSize = event.rows;
     this.loadProducts();
   }
 
-  /**
-   * Favori ikonunu tetikler
-   */
   toggleFavorite(product: ProductDTO): void {
-    console.log('Favori işlemi:', product.id);
+    // Favori mantığı buraya gelecek
   }
 }

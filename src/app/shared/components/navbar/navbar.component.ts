@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core'; // ChangeDetectorRef eklendi
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
@@ -26,53 +26,55 @@ import { AuthService } from '../../../core/auth/auth.service';
 })
 export class NavbarComponent implements OnInit {
   private categoryService = inject(CategoryService);
+  private cartService = inject(CartService);
   public authService = inject(AuthService);
-  private cdr = inject(ChangeDetectorRef); // 1. ChangeDetectorRef'i inject ediyoruz
+  private cdr = inject(ChangeDetectorRef);
 
   items: MenuItem[] = [];
   cartItemCount: number = 0;
 
   ngOnInit(): void {
-    // 2. Menünün başlangıç iskeletini hemen veriyoruz ki Angular sıfırdan doluya geçerken şaşırmasın
-    this.items = [
-      { label: 'Tüm Ürünler', icon: 'pi pi-fw pi-box', routerLink: ['/products'] },
-      { label: 'Kategoriler', icon: 'pi pi-fw pi-tags', items: [{ label: 'Yükleniyor...' }] }
-    ];
-    this.loadCategories();
+    this.buildMenu();
+    this.subscribeToCart();
   }
 
-  loadCategories(): void {
+  private subscribeToCart(): void {
+    this.cartService.cart$.subscribe(cart => {
+      // cart?.items?.length: cart varsa items'a bak, items varsa length'e bak.
+      // ?? 0: Eğer sonuç null ise 0 ata.
+      this.cartItemCount = cart?.items?.length ?? 0;
+      this.cdr.detectChanges();
+    });
+  }
+
+  buildMenu(): void {
+    if (this.authService.isSeller()) {
+      // Satıcı Menüsü
+      this.items = [
+        { label: 'Dashboard', icon: 'pi pi-chart-bar', routerLink: ['/seller-panel/dashboard'] },
+        { label: 'Siparişler', icon: 'pi pi-shopping-bag', routerLink: ['/seller-panel/orders'] },
+        { label: 'Ürün Yönetimi', icon: 'pi pi-box', routerLink: ['/seller-panel/my-products'] }
+      ];
+    } else {
+      // Müşteri/Ziyaretçi Menüsü
+      this.items = [
+        { label: 'Tüm Ürünler', icon: 'pi pi-th-large', routerLink: ['/products'] },
+        { label: 'Kategoriler', icon: 'pi pi-tags', items: [] }
+      ];
+      this.loadCategories();
+    }
+  }
+
+  private loadCategories(): void {
     this.categoryService.getMainCategories().subscribe({
       next: (categories: any[]) => {
-        const categoryItems: MenuItem[] = categories.map((cat: any) => ({
+        const categoryItems = categories.map(cat => ({
           label: cat.name,
           routerLink: ['/products'],
           queryParams: { categoryId: cat.id }
         }));
 
-        this.items = [
-          {
-            label: 'Tüm Ürünler',
-            icon: 'pi pi-fw pi-box',
-            routerLink: ['/products']
-          },
-          {
-            label: 'Kategoriler',
-            icon: 'pi pi-fw pi-tags',
-            items: categoryItems.length > 0 ? categoryItems : [{ label: 'Kategori bulunamadı' }]
-          }
-        ];
-
-        // 3. Veri geldikten sonra Angular'a manuel olarak kontrol etmesini söylüyoruz
-        this.cdr.detectChanges();
-      },
-      error: (err: any) => {
-        console.error('Kategoriler yüklenemedi:', err);
-        this.items = [
-          { label: 'Tüm Ürünler', icon: 'pi pi-fw pi-box', routerLink: ['/products'] }
-        ];
-
-        // Hata durumunda da menüyü güncellediğimiz için tetikliyoruz
+        this.items[1].items = categoryItems;
         this.cdr.detectChanges();
       }
     });

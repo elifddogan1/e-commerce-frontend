@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderService } from '../../checkout-flow/services/order.service';
 import { OrderDTO } from '../../../shared/models/order.model';
@@ -8,11 +8,12 @@ import { OrderDTO } from '../../../shared/models/order.model';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './store-orders.component.html',
-  styleUrl: './store-orders.component.css'
+  styleUrl: './store-orders.component.scss'
 })
 export class StoreOrdersComponent implements OnInit {
   private orderService = inject(OrderService);
-  
+  private cdr = inject(ChangeDetectorRef);
+
   orders: OrderDTO[] = [];
   loading = true;
   error: string | null = null;
@@ -33,14 +34,18 @@ export class StoreOrdersComponent implements OnInit {
 
   fetchOrders(): void {
     this.loading = true;
+    this.cdr.detectChanges();
+
     this.orderService.getStoreOrders().subscribe({
       next: (data) => {
         this.orders = data;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.error = 'Siparişler yüklenirken bir hata oluştu.';
         this.loading = false;
+        this.cdr.detectChanges();
         console.error(err);
       }
     });
@@ -52,11 +57,11 @@ export class StoreOrdersComponent implements OnInit {
         const order = this.orders.find(o => o.id === orderId);
         if (order) {
           order.status = newStatus;
+          this.cdr.detectChanges();
         }
       },
       error: (err) => {
         alert('Durum güncellenirken bir hata oluştu.');
-        console.error(err);
       }
     });
   }
@@ -77,6 +82,7 @@ export class StoreOrdersComponent implements OnInit {
     } else {
       this.expandedOrderIds.add(orderId);
     }
+    this.cdr.detectChanges();
   }
 
   isExpanded(orderId: string): boolean {

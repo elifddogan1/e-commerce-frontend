@@ -1,76 +1,79 @@
-<div class="product-list-container">
+<div class="page-wrapper">
+  <div class="content-container">
 
-  <div class="header-section flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2 class="title m-0">Tüm Ürünler</h2>
-      <span class="subtitle text-500" *ngIf="!loading">{{ totalElements }} ürün bulundu</span>
+    <!-- Header Section -->
+    <header class="list-header">
+      <div class="header-text">
+        <h2>Tüm Ürünler</h2>
+        <p *ngIf="!loading">{{ totalElements }} harika ürün sizi bekliyor</p>
+      </div>
+      <div class="header-search">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input type="text" pInputText placeholder="Ürünlerde ara..." class="glass-input" />
+        </span>
+      </div>
+    </header>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-overlay">
+      <p-progressSpinner></p-progressSpinner>
     </div>
-  </div>
 
-  <div *ngIf="loading" class="flex justify-content-center align-items-center" style="min-height: 40vh;">
-    <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
-  </div>
+    <!-- Empty State -->
+    <div *ngIf="!loading && products.length === 0" class="glass-panel empty-state">
+      <i class="pi pi-search-minus"></i>
+      <h3>Sonuç Bulunamadı</h3>
+      <p>Arama kriterlerinize uygun ürün bulunmamaktadır.</p>
+    </div>
 
-  <div *ngIf="!loading && products.length === 0" class="empty-state text-center p-8">
-    <i class="pi pi-box text-6xl text-300 mb-3"></i>
-    <p class="text-xl text-600">Arama kriterlerinize uygun ürün bulunamadı.</p>
-  </div>
+    <!-- Product Grid -->
+    <div *ngIf="!loading && products.length > 0" class="product-grid">
+      <div *ngFor="let product of products" class="product-card-wrapper">
 
-  <div *ngIf="!loading && products.length > 0" class="grid">
-    <div *ngFor="let product of products" class="col-12 sm:col-6 md:col-4 lg:col-3">
-      
-      <div class="product-card shadow-1 hover:shadow-3 transition-duration-200 border-round p-3 surface-card h-full flex flex-column">
-        
-        <!-- Yönlendirme Linki Burada! -->
-        <div class="image-container relative overflow-hidden border-round mb-3 cursor-pointer" [routerLink]="['/products', product.id]">
-          <span class="badge absolute top-0 left-0 m-2 z-1 bg-primary text-white text-xs font-bold px-2 py-1 border-round">YENİ</span>
-          
-          <button 
-            class="favorite-btn absolute top-0 right-0 m-2 z-1 p-button p-button-rounded p-button-text surface-0 shadow-2 hover:bg-red-50"
-            (click)="$event.stopPropagation(); toggleFavorite(product)">
-            <i class="pi pi-heart text-red-500"></i>
-          </button>
+        <div class="glass-card product-card">
+          <!-- Image Section -->
+          <div class="card-image" [routerLink]="['/products', product.id]">
+            <div class="badge-new">YENİ</div>
 
-          <img 
-            [src]="product.variants && product.variants[0]?.imageUrl ? product.variants[0].imageUrl : 'assets/no-image.png'" 
-            [alt]="product.name"
-            class="w-full h-15rem object-cover block transition-transform transition-duration-500"
-          >
-        </div>
-        
-        <div class="product-details flex-grow-1 cursor-pointer" [routerLink]="['/products', product.id]">
-          <div class="text-xs text-500 mb-1">ID: {{ product.id.substring(0,8) }}...</div>
-          <h3 class="product-title m-0 text-lg font-bold text-900 line-height-2 mb-2">{{ product.name }}</h3>
-          <p class="product-desc text-sm text-600 m-0 mb-3 line-clamp-2">{{ product.description }}</p>
-        </div>
+            <button class="btn-fav" (click)="$event.stopPropagation(); toggleFavorite(product)">
+              <i class="pi pi-heart"></i>
+            </button>
 
-        <div class="product-footer flex align-items-center justify-content-between mt-auto pt-3 border-top-1 surface-border">
-          <span class="price text-xl font-bold text-primary">
-            {{ product.basePrice | currency:'TRY':'symbol-narrow' }}
-          </span>
-          
-          <p-button 
-            icon="pi pi-shopping-cart" 
-            [rounded]="true" 
-            severity="primary" 
-            (onClick)="addToCart(product)"
-            pTooltip="Sepete Ekle" 
-            tooltipPosition="bottom">
-          </p-button>
+            <img
+              [src]="product.variants && product.variants[0]?.imageUrl ? product.variants[0].imageUrl : 'assets/no-image.png'"
+              [alt]="product.name">
+          </div>
+
+          <!-- Info Section -->
+          <div class="card-info" [routerLink]="['/products', product.id]">
+            <span class="category-tag">Teknoloji</span>
+            <h3 class="product-name">{{ product.name }}</h3>
+            <p class="product-desc">{{ product.description }}</p>
+          </div>
+
+          <!-- Footer Section -->
+          <div class="card-footer">
+            <div class="price-box">
+              <span class="currency">₺</span>
+              <span class="amount">{{ product.basePrice | number:'1.2-2' }}</span>
+            </div>
+
+            <button class="btn-add-cart" (click)="addToCart(product)" pTooltip="Sepete Ekle" tooltipPosition="left">
+              <i class="pi pi-shopping-cart"></i>
+            </button>
+          </div>
         </div>
 
       </div>
     </div>
-  </div>
 
-  <div class="pagination-container mt-5" *ngIf="!loading && totalElements > 0">
-    <p-paginator 
-      (onPageChange)="onPageChange($event)" 
-      [first]="currentPage * pageSize" 
-      [rows]="pageSize" 
-      [totalRecords]="totalElements"
-      [rowsPerPageOptions]="[12, 24, 48]">
-    </p-paginator>
-  </div>
+    <!-- Pagination -->
+    <div class="glass-panel pagination-panel" *ngIf="!loading && totalElements > 0">
+      <p-paginator (onPageChange)="onPageChange($event)" [first]="currentPage * pageSize" [rows]="pageSize"
+        [totalRecords]="totalElements" [rowsPerPageOptions]="[12, 24, 48]" styleClass="custom-paginator">
+      </p-paginator>
+    </div>
 
+  </div>
 </div>

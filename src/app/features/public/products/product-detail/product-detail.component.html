@@ -1,95 +1,124 @@
-<!-- Ana Kapsayıcı: Yükleme BİTTİYSE ve Ürün VARSA -->
-<div class="product-detail-container" *ngIf="!loading && product">
+<div class="page-wrapper">
 
-    <div class="grid">
-        <div class="col-12 md:col-6 flex justify-content-center">
-            <div class="image-box">
-                <img [src]="selectedVariant?.imageUrl ? selectedVariant!.imageUrl : 'assets/no-image.png'"
-                    [alt]="product.name" class="w-full border-round shadow-2"
-                    style="object-fit: contain; max-height: 500px;" />
-            </div>
-        </div>
-
-        <div class="col-12 md:col-6 flex flex-column gap-3 p-4">
-            <h1 class="m-0 text-3xl font-bold">{{ product.name }}</h1>
-            <p class="text-600 line-height-3 m-0">{{ product.description }}</p>
-
-            <div class="text-primary text-4xl font-bold mt-2">
-                {{ (selectedVariant ? selectedVariant.price : product.basePrice) | currency:'TRY':'symbol-narrow' }}
-            </div>
-
-            <div class="flex flex-column gap-2 mt-3" *ngIf="product.variants && product.variants.length > 0">
-                <label class="font-semibold text-700">Seçenekler</label>
-                <p-select [options]="product.variants" [(ngModel)]="selectedVariant" optionLabel="name"
-                    placeholder="Bir varyant seçin" styleClass="w-full md:w-20rem">
-                </p-select>
-            </div>
-
-            <div class="mt-2" *ngIf="selectedVariant">
-                <p-tag [severity]="selectedVariant.stockQuantity > 0 ? 'success' : 'danger'"
-                    [value]="selectedVariant.stockQuantity > 0 ? 'Stokta Var (' + selectedVariant.stockQuantity + ')' : 'Stok Tükendi'">
-                </p-tag>
-            </div>
-
-            <div class="mt-4">
-                <p-button label="Sepete Ekle" icon="pi pi-shopping-cart" size="large"
-                    [disabled]="!selectedVariant || selectedVariant.stockQuantity <= 0" (onClick)="addToCart()"
-                    styleClass="w-full md:w-20rem">
-                </p-button>
-            </div>
-        </div>
+    <!-- Yükleme Durumu -->
+    <div class="loading-overlay" *ngIf="loading">
+        <p-progressSpinner></p-progressSpinner>
+        <p>Ürün hazırlanıyor...</p>
     </div>
 
-    <p-divider styleClass="my-5"></p-divider>
+    <!-- Ana İçerik -->
+    <div class="container" *ngIf="!loading && product">
 
-    <div class="reviews-section">
-        <h2 class="text-2xl font-bold mb-4">Müşteri Değerlendirmeleri ({{ reviews.length }})</h2>
+        <div class="glass-panel main-detail-grid">
+            <!-- Sol: Ürün Görseli -->
+            <div class="product-gallery">
+                <div class="image-container">
+                    <img [src]="selectedVariant?.imageUrl || 'assets/no-image.png'" [alt]="product.name" />
+                    <div class="zoom-hint"><i class="pi pi-search-plus"></i></div>
+                </div>
+            </div>
 
-        <div class="grid" *ngIf="reviews.length > 0; else noReviews">
-            <div class="col-12 md:col-6 lg:col-4" *ngFor="let review of reviews">
-                <p-card styleClass="h-full border-1 surface-border shadow-none">
-                    <div class="flex justify-content-between align-items-center mb-2">
-                        <span class="font-bold">{{ review.maskedUserName }}</span>
-                        <span class="text-500 text-sm">{{ review.createdAt | date:'shortDate' }}</span>
+            <!-- Sağ: Ürün Bilgileri -->
+            <div class="product-info-column">
+                <div class="info-header">
+                    <p-tag value="Yeni Koleksiyon" severity="info" [rounded]="true" styleClass="mb-2"></p-tag>
+                    <h1>{{ product.name }}</h1>
+                    <p class="description">{{ product.description }}</p>
+                </div>
+
+                <div class="price-section">
+                    <span class="price-label">Fiyat</span>
+                    <div class="main-price">
+                        {{ (selectedVariant ? selectedVariant.price : product.basePrice) |
+                        currency:'TRY':'symbol-narrow' }}
                     </div>
+                </div>
 
-                    <p-rating [(ngModel)]="review.starRating" [readonly]="true"></p-rating>
+                <p-divider></p-divider>
 
-                    <div class="mt-2 text-xs text-500" *ngIf="review.variantName">
-                        Seçenek: {{ review.variantName }}
-                    </div>
+                <div class="selection-section" *ngIf="product.variants?.length">
+                    <label class="section-label">Seçenek Seçin</label>
+                    <p-select [options]="product.variants" [(ngModel)]="selectedVariant" optionLabel="name"
+                        placeholder="Bir seçenek belirleyin" styleClass="custom-select">
+                    </p-select>
+                </div>
 
-                    <h4 class="mt-3 mb-1">{{ review.title }}</h4>
-                    <p class="text-700 m-0 line-height-3">{{ review.body }}</p>
+                <div class="stock-info" *ngIf="selectedVariant">
+                    <span class="stock-badge"
+                        [ngClass]="selectedVariant.stockQuantity > 0 ? 'in-stock' : 'out-of-stock'">
+                        <i class="pi"
+                            [ngClass]="selectedVariant.stockQuantity > 0 ? 'pi-check-circle' : 'pi-times-circle'"></i>
+                        {{ selectedVariant.stockQuantity > 0 ? 'Stokta Var (' + selectedVariant.stockQuantity + ')' :
+                        'Stok Tükendi' }}
+                    </span>
+                </div>
 
-                    <div class="flex align-items-center gap-2 mt-3 text-green-600 text-sm font-semibold"
-                        *ngIf="review.isVerified">
-                        <i class="pi pi-check-circle"></i> Doğrulanmış Alıcı
-                    </div>
-                </p-card>
+                <div class="action-section">
+                    <button class="btn-add-cart" [disabled]="!selectedVariant || selectedVariant.stockQuantity <= 0"
+                        (click)="addToCart()">
+                        <i class="pi pi-shopping-cart"></i>
+                        <span>Sepete Ekle</span>
+                    </button>
+
+                    <button class="btn-wishlist">
+                        <i class="pi pi-heart"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <ng-template #noReviews>
-            <div class="text-center p-5 surface-100 border-round">
-                <i class="pi pi-comment text-4xl text-500 mb-3"></i>
-                <p class="m-0 text-600 text-lg">Bu ürün için henüz bir değerlendirme yapılmamış.</p>
+        <!-- Değerlendirmeler Bölümü -->
+        <div class="glass-panel reviews-panel mt-6">
+            <div class="reviews-header">
+                <h2>Müşteri Değerlendirmeleri</h2>
+                <div class="review-stats">
+                    <span class="count">{{ reviews.length }} Yorum</span>
+                </div>
             </div>
-        </ng-template>
+
+            <div class="reviews-grid" *ngIf="reviews.length > 0; else noReviews">
+                <div class="review-card" *ngFor="let review of reviews">
+                    <div class="review-top">
+                        <div class="user-meta">
+                            <div class="user-avatar">{{ review.maskedUserName.charAt(0) }}</div>
+                            <div class="user-info">
+                                <span class="name">{{ review.maskedUserName }}</span>
+                                <span class="date">{{ review.createdAt | date:'mediumDate' }}</span>
+                            </div>
+                        </div>
+                        <p-rating [(ngModel)]="review.starRating" [readonly]="true"></p-rating>
+                    </div>
+
+                    <div class="review-content">
+                        <h4 class="review-title">{{ review.title }}</h4>
+                        <p>{{ review.body }}</p>
+                        <div class="variant-tag" *ngIf="review.variantName">
+                            <i class="pi pi-tag"></i> {{ review.variantName }}
+                        </div>
+                    </div>
+
+                    <div class="verified-badge" *ngIf="review.isVerified">
+                        <i class="pi pi-verified"></i> Doğrulanmış Alıcı
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #noReviews>
+                <div class="empty-reviews">
+                    <i class="pi pi-comments"></i>
+                    <p>Henüz yorum yapılmamış. İlk yorumu sen yap!</p>
+                </div>
+            </ng-template>
+        </div>
+
     </div>
 
-</div>
+    <!-- Hata Mesajı -->
+    <div class="glass-panel error-panel" *ngIf="!loading && !product">
+        <i class="pi pi-search"></i>
+        <h2>Ürün Bulunamadı</h2>
+        <p>Aradığınız ürün yayından kaldırılmış olabilir.</p>
+        <button routerLink="/products" class="btn-outline">Ürünlere Dön</button>
+    </div>
 
-<!-- Yükleme Animasyonu (Sadece loading = true ise) -->
-<div class="flex justify-content-center align-items-center" style="min-height: 50vh;" *ngIf="loading">
-    <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
-</div>
-
-<!-- Hata Durumu (Yükleme BİTTİYSE ve Ürün YOKSA) -->
-<div class="flex flex-column justify-content-center align-items-center text-center p-5" style="min-height: 50vh;"
-    *ngIf="!loading && !product">
-    <i class="pi pi-exclamation-triangle text-6xl text-red-500 mb-4"></i>
-    <h2 class="m-0 text-900 mb-2">Ürün Bulunamadı</h2>
-    <p class="text-600 mb-4">Aradığınız ürün yayından kaldırılmış veya bir bağlantı hatası oluşmuş olabilir.</p>
-    <p-button label="Ürünlere Dön" icon="pi pi-arrow-left" routerLink="/products"></p-button>
 </div>

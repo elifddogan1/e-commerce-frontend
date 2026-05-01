@@ -1,0 +1,327 @@
+$primary-blue: #3b82f6;
+$primary-purple: #8b5cf6;
+$gradient: linear-gradient(135deg, $primary-blue 0%, $primary-purple 100%);
+$glass-bg: rgba(255, 255, 255, 0.85);
+$text-main: #1e293b;
+$text-muted: #64748b;
+
+.page-wrapper {
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem;
+  background: linear-gradient(135deg, #f0f4ff 0%, #f5f3ff 100%);
+  display: flex;
+  justify-content: center;
+}
+
+.glass-panel {
+  width: 100%;
+  max-width: 1200px;
+  background: $glass-bg;
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: $gradient;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  p {
+    color: $text-muted;
+    font-size: 1.05rem;
+  }
+}
+
+// Tablo Tasarımı
+.table-container {
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    background: rgba(255, 255, 255, 0.6);
+    padding: 1.25rem;
+    text-align: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: $text-muted;
+  }
+
+  .order-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background 0.3s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    &.expanded {
+      background: rgba(59, 130, 246, 0.03);
+    }
+
+    td {
+      padding: 1.25rem;
+      vertical-align: middle;
+    }
+  }
+}
+
+// Sipariş No Badge
+.id-tag {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+// Tarih Kutusu
+.date-box {
+  display: flex;
+  flex-direction: column;
+
+  .date {
+    font-weight: 600;
+    color: $text-main;
+  }
+
+  .time {
+    font-size: 0.8rem;
+    color: $text-muted;
+  }
+}
+
+.price {
+  font-weight: 800;
+  color: $primary-blue;
+  font-size: 1.1rem;
+}
+
+// Status Badges (Vurgulu Renkler)
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-block;
+
+  &.status-pending {
+    background: #ffedd5;
+    color: #ea580c;
+  }
+
+  &.status-confirmed {
+    background: #dbeafe;
+    color: #2563eb;
+  }
+
+  &.status-shipped {
+    background: #f3e8ff;
+    color: #9333ea;
+  }
+
+  &.status-delivered {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  &.status-cancelled,
+  &.status-returned {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+}
+
+// Custom Select
+.custom-select {
+  padding: 0.6rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  outline: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: $text-main;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: $primary-purple;
+  }
+}
+
+// Sipariş Detayları (Expanded Section)
+.details-row td {
+  padding: 0;
+}
+
+.items-container {
+  margin: 0.5rem 1.25rem 1.5rem 1.25rem;
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #edf2f7;
+
+  .items-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: $text-main;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i {
+      color: $primary-blue;
+    }
+  }
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed #f1f5f9;
+
+  &:last-child {
+    border: none;
+  }
+
+  .item-main {
+    display: flex;
+    flex-direction: column;
+
+    .item-name {
+      font-weight: 600;
+      color: $text-main;
+    }
+
+    .item-variant {
+      font-size: 0.8rem;
+      color: $text-muted;
+    }
+  }
+
+  .item-meta {
+    display: flex;
+    gap: 2rem;
+
+    .item-qty {
+      font-weight: 700;
+      color: $text-muted;
+    }
+
+    .item-price {
+      font-weight: 700;
+      color: $text-main;
+    }
+  }
+}
+
+// Yenile Butonu
+.btn-refresh {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  color: $text-main;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    border-color: $primary-blue;
+    color: $primary-blue;
+    background: #f8faff;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: $primary-blue;
+  font-size: 1.1rem;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+// Spinner
+.spinner {
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border-left-color: $primary-blue;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Boş Durum
+.empty-state {
+  text-align: center;
+  padding: 5rem 0;
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    background: #f8fafc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+
+    i {
+      font-size: 2.5rem;
+      color: #cbd5e1;
+    }
+  }
+
+  h3 {
+    font-weight: 700;
+    color: $text-main;
+  }
+
+  p {
+    color: $text-muted;
+    margin-top: 0.5rem;
+  }
+}

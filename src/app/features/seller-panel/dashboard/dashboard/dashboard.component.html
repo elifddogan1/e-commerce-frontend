@@ -1,0 +1,82 @@
+<div class="page-wrapper">
+    <div class="dashboard-container">
+
+        <header class="dashboard-header">
+            <h2>Mağaza Özeti</h2>
+            <p>Satışlarınıza ve envanterinize genel bakış</p>
+        </header>
+
+        <!-- Skeleton Loading aynı kalıyor -->
+        <div *ngIf="loading" class="stats-grid">
+            <div *ngFor="let i of [1,2,3,4]" class="glass-card skeleton">
+                <div class="skeleton-badge"></div>
+                <div class="skeleton-title"></div>
+                <div class="skeleton-value"></div>
+            </div>
+        </div>
+
+        <!-- Stats Cards (Interaktif Versiyon) -->
+        <div *ngIf="!loading" class="stats-grid">
+
+            <!-- Ciro Kartı (Genelde sadece görüntülemedir ama sipariş listesine gidebilir) -->
+            <div class="glass-card stat-card interactive" [routerLink]="['/seller-panel/orders']">
+                <div class="card-header">
+                    <span class="badge badge-green"><i class="pi pi-wallet"></i> Gelir</span>
+                    <i class="pi pi-arrow-up-right link-icon-mini"></i>
+                </div>
+                <h3>Toplam Ciro</h3>
+                <p class="value highlight-green">
+                    {{ stats.totalRevenue | currency:'TRY':'symbol-narrow':'1.2-2' }}
+                </p>
+            </div>
+
+            <!-- Sipariş Sayısı -->
+            <div class="glass-card stat-card interactive" [routerLink]="['/seller-panel/orders']">
+                <div class="card-header">
+                    <span class="badge badge-blue"><i class="pi pi-shopping-bag"></i> Sipariş</span>
+                    <i class="pi pi-arrow-up-right link-icon-mini"></i>
+                </div>
+                <h3>Toplam Sipariş</h3>
+                <p class="value">{{ stats.totalOrders }}</p>
+            </div>
+
+            <!-- Bekleyen Sipariş -->
+            <!-- Buraya [queryParams]="{status: 'PENDING'}" ekleyerek sipariş listesinde filtreleme yapabilirsin -->
+            <div class="glass-card stat-card interactive" [routerLink]="['/seller-panel/orders']">
+                <div class="card-header">
+                    <span class="badge badge-orange"><i class="pi pi-clock"></i> Bekleyen</span>
+                    <i class="pi pi-arrow-up-right link-icon-mini"></i>
+                </div>
+                <h3>Hazırlanacak</h3>
+                <p class="value">{{ stats.pendingOrders }}</p>
+            </div>
+
+            <!-- Ürün Sayısı -->
+            <div class="glass-card stat-card interactive" [routerLink]="['/seller-panel/my-products']">
+                <div class="card-header">
+                    <span class="badge badge-purple"><i class="pi pi-box"></i> Envanter</span>
+                    <i class="pi pi-arrow-up-right link-icon-mini"></i>
+                </div>
+                <h3>Aktif Ürün Sayısı</h3>
+                <p class="value">{{ stats.totalProducts }}</p>
+            </div>
+
+        </div>
+
+        <!-- Alt Bölüm (Hızlı İşlemler) aynı kalabilir -->
+        <div class="bottom-grid">
+            <div class="glass-card links-card">
+                <h3>Hızlı İşlemler</h3>
+                <div class="links-container">
+                    <button routerLink="/seller-panel/my-products/add" class="link-item">
+                        <div class="link-icon"><i class="pi pi-plus"></i></div>
+                        <span>Yeni Ürün Ekle</span>
+                        <i class="pi pi-angle-right arrow"></i>
+                    </button>
+                    <!-- Diğer linkler... -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

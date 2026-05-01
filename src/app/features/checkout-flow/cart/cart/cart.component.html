@@ -1,40 +1,97 @@
-<div class="cart-container p-4">
-  @if (authService.isLoggedIn()) {
-    <h2>Sepetinizdeki Ürünler</h2>
-    <hr />
+<div class="page-wrapper">
+  <div class="container">
 
-    @if (cart$ | async; as cart) {
-      @if (cart.items && cart.items.length > 0) {
+    <header class="cart-header" *ngIf="authService.isLoggedIn()">
+      <h2>Alışveriş Sepetim</h2>
+      <p>Seçtiğiniz harika ürünleri kontrol edin ve alışverişi tamamlayın.</p>
+    </header>
 
-        <div class="flex flex-column gap-3">
-          @for (item of cart.items; track item.id) {
-            <app-cart-item
-              [item]="item"
-              (remove)="removeItem($event)"
-              (updateQuantity)="updateItemQuantity($event)">
-            </app-cart-item>
-          }
-        </div>
+    <ng-container *ngIf="authService.isLoggedIn(); else loginWarning">
+      <div *ngIf="cart$ | async as cart; else loadingTemplate">
 
-        <div class="flex justify-content-end mt-4">
-            <div class="w-full md:w-4 surface-100 p-4 border-round shadow-1">
-                <div class="flex justify-content-between font-bold text-xl mb-4 text-900">
-                    <span>Genel Toplam:</span>
-                    <span class="text-primary">{{ cart.cartTotal }} TL</span>
-                </div>
-                <p-button
-                    label="Siparişi Tamamla"
-                    icon="pi pi-check"
-                    styleClass="w-full p-button-success p-button-lg"
-                    [routerLink]="['/checkout']">
-                </p-button>
+        <div class="cart-layout" *ngIf="cart.items && cart.items.length > 0; else emptyCart">
+
+          <!-- Ürün Listesi -->
+          <div class="items-column">
+            <div class="glass-panel items-panel">
+              <div class="items-header">
+                <span>{{ cart.items.length }} Ürün</span>
+                <button class="btn-text" (click)="cartService.loadCart()">Sepeti Güncelle</button>
+              </div>
+
+              <div class="items-list">
+                <app-cart-item *ngFor="let item of cart.items; trackBy: trackById" [item]="item"
+                  (remove)="removeItem($event)" (updateQuantity)="updateItemQuantity($event)">
+                </app-cart-item>
+              </div>
             </div>
+          </div>
+
+          <!-- Sipariş Özeti (Sticky) -->
+          <div class="summary-column">
+            <div class="glass-panel summary-card">
+              <h3>Sipariş Özeti</h3>
+
+              <div class="summary-details">
+                <div class="detail-row">
+                  <span>Ara Toplam</span>
+                  <span>{{ cart.cartTotal | currency:'TRY':'symbol-narrow' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span>Kargo</span>
+                  <span class="text-free">Ücretsiz</span>
+                </div>
+                <p-divider></p-divider>
+                <div class="detail-row total">
+                  <span>Genel Toplam</span>
+                  <span class="total-amount">{{ cart.cartTotal | currency:'TRY':'symbol-narrow' }}</span>
+                </div>
+              </div>
+
+              <button class="btn-checkout" [routerLink]="['/checkout']">
+                <span>Ödeme Adımına Geç</span>
+                <i class="pi pi-arrow-right"></i>
+              </button>
+
+              <div class="security-info">
+                <i class="pi pi-shield"></i>
+                <span>Güvenli Ödeme Altyapısı</span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-      } @else {
-        <p class="text-600 text-lg mt-4">Sepetiniz şu an boş.</p>
-      }
-    }
-  } @else {
-    }
+        <!-- Boş Sepet Şablonu -->
+        <ng-template #emptyCart>
+          <div class="glass-panel empty-state">
+            <div class="empty-icon-box">
+              <i class="pi pi-shopping-cart"></i>
+            </div>
+            <h3>Sepetiniz şu an boş</h3>
+            <p>Hala keşfedilecek harika ürünlerimiz var!</p>
+            <button routerLink="/products" class="btn-primary">Alışverişe Başla</button>
+          </div>
+        </ng-template>
+
+      </div>
+    </ng-container>
+
+    <!-- Giriş Yapılmamışsa -->
+    <ng-template #loginWarning>
+      <div class="glass-panel empty-state">
+        <i class="pi pi-lock text-4xl text-blue-500 mb-3"></i>
+        <h3>Oturum Açmanız Gerekiyor</h3>
+        <p>Sepetinizi görüntülemek için lütfen giriş yapın.</p>
+        <button routerLink="/auth/login" class="btn-primary">Giriş Yap</button>
+      </div>
+    </ng-template>
+
+    <ng-template #loadingTemplate>
+      <div class="loading-box">
+        <i class="pi pi-spin pi-spinner text-3xl"></i>
+      </div>
+    </ng-template>
+
+  </div>
 </div>

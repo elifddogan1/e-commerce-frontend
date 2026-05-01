@@ -1,20 +1,20 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common'; // Pipe'lar için eklendi
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router'; // RouterModule eklendi
-import { switchMap } from 'rxjs/operators'; // Daha temiz veri çekimi için
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 import { ProductService } from '../../services/product.service';
 import { ProductDTO, ProductVariantDTO, ReviewDTO } from '../../../../shared/models/product.model';
 import { CartService } from '../../../checkout-flow/services/cart.service';
 
-// PrimeNG v18 Güncel Modülleri
+// PrimeNG v18 Modülleri
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RatingModule } from 'primeng/rating';
-import { SelectModule } from 'primeng/select'; // PrimeNG 18 standardı
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-product-detail',
@@ -22,7 +22,7 @@ import { SelectModule } from 'primeng/select'; // PrimeNG 18 standardı
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule, // Navigasyon için gerekli
+    RouterModule,
     ButtonModule,
     TagModule,
     CardModule,
@@ -30,7 +30,6 @@ import { SelectModule } from 'primeng/select'; // PrimeNG 18 standardı
     ProgressSpinnerModule,
     RatingModule,
     SelectModule,
-    // Pipe'ları standalone'da bazen direkt eklemek hatayı çözer
     CurrencyPipe,
     DatePipe
   ],
@@ -40,68 +39,59 @@ import { SelectModule } from 'primeng/select'; // PrimeNG 18 standardı
 export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
-
   private cartService = inject(CartService);
+  private cdr = inject(ChangeDetectorRef);
 
   product: ProductDTO | null = null;
   reviews: ReviewDTO[] = [];
   selectedVariant: ProductVariantDTO | null = null;
   loading: boolean = true;
 
-
-  addToCart() {
-  if (!this.selectedVariant) return;
-
-  // HATA ÇÖZÜMÜ: Parametreleri süslü parantez içine al
-  this.cartService.addToCart({
-    variantId: this.selectedVariant.id,
-    quantity: 1
-  }).subscribe({
-    next: (response) => {
-      console.log('Sepete eklendi!', response);
-    },
-    error: (err) => {
-      console.error('Sepete eklenirken hata oluştu', err);
-    }
-  });
-}
-
   ngOnInit() {
-    // URL'deki ID değiştiğinde veriyi otomatik yenileyen yapı
     this.route.paramMap.pipe(
       switchMap(params => {
         const id = params.get('id');
         this.loading = true;
+        this.cdr.detectChanges();
         if (id) {
-          // Önce yorumları çekelim (ürün gelene kadar başlasın)
           this.loadReviews(id);
-          // Ürün detayını döndürelim
           return this.productService.getProductById(id);
         }
-        return []; // ID yoksa boş dön
+        return [];
       })
     ).subscribe({
       next: (res: any) => {
         this.product = res;
-        if (res && res.variants && res.variants.length > 0) {
+        if (res?.variants?.length > 0) {
           this.selectedVariant = res.variants[0];
         }
         this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Ürün yükleme hatası:', err);
+      error: () => {
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
   loadReviews(productId: string) {
     this.productService.getProductReviews(productId).subscribe({
-      // res ve err için tipleri açıkça belirttik
-      next: (res: ReviewDTO[]) => this.reviews = res,
-      error: (err: any) => console.error('Yorum yükleme hatası:', err)
+      next: (res: ReviewDTO[]) => {
+        this.reviews = res;
+        this.cdr.detectChanges();
+      }
     });
   }
 
-
+  addToCart() {
+    if (!this.selectedVariant) return;
+    this.cartService.addToCart({
+      variantId: this.selectedVariant.id,
+      quantity: 1
+    }).subscribe({
+      next: () => alert('Ürün sepete eklendi!'),
+      error: (err) => console.error(err)
+    });
+  }
 }

@@ -1,63 +1,109 @@
 <p-toast></p-toast>
-<div class="grid p-4 container mx-auto">
 
-  <div class="col-12 lg:col-8">
+<div class="page-wrapper">
+  <div class="checkout-container">
 
-    @if (currentStep() === 'ADDRESS') {
-      <h2 class="mb-4"><i class="pi pi-map-marker mr-2"></i>Teslimat Adresi</h2>
-      <div class="grid">
-        @for (addr of addresses(); track addr.id) {
-          <div class="col-12 md:col-6">
-            <div class="p-3 border-round border-2 cursor-pointer shadow-1"
-                 [ngClass]="selectedAddressId() === addr.id ? 'border-primary surface-100' : 'border-300 surface-card'"
-                 (click)="selectedAddressId.set(addr.id)">
-              <div class="flex justify-content-between font-bold">
-                <span>{{ addr.title }}</span>
+    <!-- SOL TARAF: Akış -->
+    <div class="checkout-main">
+      <div class="glass-panel">
+
+        <!-- Adım Göstergesi (Visual Breadcrumb) -->
+        <div class="step-indicator">
+          <div class="step" [class.active]="currentStep() === 'ADDRESS'"
+            [class.completed]="currentStep() === 'PAYMENT'">
+            <span class="num">1</span>
+            <span class="lbl">Adres</span>
+          </div>
+          <div class="line"></div>
+          <div class="step" [class.active]="currentStep() === 'PAYMENT'">
+            <span class="num">2</span>
+            <span class="lbl">Ödeme</span>
+          </div>
+        </div>
+
+        <!-- ADIM 1: ADRES SEÇİMİ -->
+        <div class="step-content" *ngIf="currentStep() === 'ADDRESS'">
+          <h2 class="step-title"><i class="pi pi-map-marker"></i> Teslimat Adresi</h2>
+          <div class="address-grid">
+            <div class="address-card" *ngFor="let addr of addresses()"
+              [class.selected]="selectedAddressId() === addr.id" (click)="selectedAddressId.set(addr.id)">
+              <div class="card-top">
+                <span class="addr-title">{{ addr.title }}</span>
                 <p-radioButton [value]="addr.id" [(ngModel)]="selectedAddressId"></p-radioButton>
               </div>
-              <p class="text-sm text-600 mt-2">{{ addr.fullName }} - {{ addr.city }}</p>
+              <div class="addr-details">
+                <p class="name">{{ addr.fullName }}</p>
+                <p class="full-addr">{{ addr.city }}, Türkiye</p>
+              </div>
             </div>
           </div>
-        }
-      </div>
-      <p-button label="Ödeme Adımına Geç" icon="pi pi-arrow-right" iconPos="right"
-                class="mt-4" [disabled]="!selectedAddressId()" [loading]="isProcessing()"
-                (onClick)="proceedToPayment()"></p-button>
-    }
 
-    @if (currentStep() === 'PAYMENT') {
-      <h2 class="mb-4"><i class="pi pi-credit-card mr-2"></i>Ödeme Bilgileri</h2>
-      <div class="surface-card p-4 shadow-2 border-round">
-        <ngx-stripe-card
-  [options]="cardOptions"
-  [elementsOptions]="elementsOptions"> </ngx-stripe-card>
-        <div class="flex gap-2 mt-4">
-          <p-button label="Geri" icon="pi pi-chevron-left" severity="secondary" [text]="true" (onClick)="currentStep.set('ADDRESS')"></p-button>
-          <p-button label="Ödemeyi Tamamla" icon="pi pi-lock" severity="success" class="flex-grow-1"
-                    [loading]="isProcessing()" (onClick)="pay()"></p-button>
-        </div>
-      </div>
-    }
-  </div>
-
-  <div class="col-12 lg:col-4">
-    <div class="p-card shadow-3 p-4 sticky top-0">
-      <h3 class="m-0 mb-3 pb-2 border-bottom-1 surface-border">Sipariş Özeti</h3>
-      @if (cart$ | async; as cart) {
-        <div class="flex flex-column gap-3">
-          @for (item of cart.items; track item.id) {
-            <div class="flex justify-content-between text-sm text-600">
-              <span>{{ item.quantity }}x {{ item.productName }}</span>
-              <span>{{ item.totalPrice }} TL</span>
-            </div>
-          }
-          <hr class="w-full border-top-1 surface-border">
-          <div class="flex justify-content-between text-xl font-bold text-900">
-            <span>Toplam</span>
-            <span class="text-primary">{{ cart.cartTotal }} TL</span>
+          <div class="action-bar mt-5">
+            <button class="btn-primary" [disabled]="!selectedAddressId()" (click)="proceedToPayment()">
+              <span>Ödeme Adımına Geç</span>
+              <i class="pi pi-arrow-right" *ngIf="!isProcessing()"></i>
+              <i class="pi pi-spin pi-spinner" *ngIf="isProcessing()"></i>
+            </button>
           </div>
         </div>
-      }
+
+        <!-- ADIM 2: ÖDEME FORMU -->
+        <div class="step-content" *ngIf="currentStep() === 'PAYMENT'">
+          <h2 class="step-title"><i class="pi pi-credit-card"></i> Ödeme Bilgileri</h2>
+          <div class="stripe-form-wrapper">
+            <div class="stripe-card-container">
+              <ngx-stripe-card [options]="cardOptions" [elementsOptions]="elementsOptions"></ngx-stripe-card>
+            </div>
+            <div class="secure-badge">
+              <i class="pi pi-lock"></i>
+              <span>256-bit SSL Güvenli Ödeme</span>
+            </div>
+          </div>
+
+          <div class="action-bar between mt-5">
+            <button class="btn-text" (click)="currentStep.set('ADDRESS')">
+              <i class="pi pi-chevron-left"></i> Adres Değiştir
+            </button>
+            <button class="btn-success" [disabled]="isProcessing()" (click)="pay()">
+              <i class="pi pi-check-circle" *ngIf="!isProcessing()"></i>
+              <i class="pi pi-spin pi-spinner" *ngIf="isProcessing()"></i>
+              <span>Ödemeyi Tamamla</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
     </div>
+
+    <!-- SAĞ TARAF: Özet -->
+    <aside class="checkout-sidebar">
+      <div class="glass-panel summary-panel">
+        <h3>Sipariş Özeti</h3>
+        <div class="items-list" *ngIf="cart$ | async as cart">
+          <div class="item-row" *ngFor="let item of cart.items">
+            <span class="name">{{ item.quantity }}x {{ item.productName }}</span>
+            <span class="price">{{ item.totalPrice | currency:'TRY':'symbol-narrow' }}</span>
+          </div>
+
+          <p-divider></p-divider>
+
+          <div class="summary-totals">
+            <div class="row">
+              <span>Ara Toplam</span>
+              <span>{{ cart.cartTotal | currency:'TRY':'symbol-narrow' }}</span>
+            </div>
+            <div class="row">
+              <span>Kargo</span>
+              <span class="free">Ücretsiz</span>
+            </div>
+            <div class="row total">
+              <span>Toplam</span>
+              <span class="amount">{{ cart.cartTotal | currency:'TRY':'symbol-narrow' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
   </div>
 </div>

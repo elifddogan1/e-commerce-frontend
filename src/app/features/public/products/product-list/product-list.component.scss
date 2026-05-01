@@ -1,276 +1,265 @@
-.product-list-container {
+// --- Değişkenler ---
+$primary-blue: #3b82f6;
+$primary-purple: #8b5cf6;
+$gradient: linear-gradient(135deg, $primary-blue 0%, $primary-purple 100%);
+$glass-bg: rgba(255, 255, 255, 0.7);
+$glass-border: rgba(255, 255, 255, 0.5);
+$text-main: #1e293b;
+$text-muted: #64748b;
+
+.page-wrapper {
+  min-height: 100vh;
+  padding: 3rem 1.5rem;
+  background: linear-gradient(135deg, #f0f4ff 0%, #f5f3ff 100%);
+}
+
+.content-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
 
-  .header-section {
-    margin-bottom: 2.5rem;
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    border-bottom: 1px solid #e2e8f0;
-    padding-bottom: 1.5rem;
+// --- Header ---
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  gap: 2rem;
 
-    .title {
+  .header-text {
+    h2 {
       font-size: 2.5rem;
       font-weight: 800;
-      color: #0f172a;
-      margin: 0;
-      letter-spacing: -0.025em;
-    }
-
-    .subtitle {
-      color: #64748b;
-      font-weight: 500;
-      font-size: 1rem;
-      background: #f1f5f9;
-      padding: 4px 12px;
-      border-radius: 20px;
-    }
-  }
-
-  .loading-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 6rem 0;
-    color: #64748b;
-
-    .loader-spinner {
-      width: 56px;
-      height: 56px;
-      border: 4px solid #f1f5f9;
-      border-top-color: #3b82f6;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 1.5rem;
+      background: $gradient;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
     }
 
     p {
-      font-size: 1.125rem;
-      font-weight: 500;
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 6rem 2rem;
-    background: #f8fafc;
-    border-radius: 24px;
-    border: 2px dashed #e2e8f0;
-
-    p {
-      color: #64748b;
-      font-size: 1.25rem;
-      font-weight: 500;
-      margin: 0;
-    }
-  }
-
-  .products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  .product-card {
-    background: #ffffff;
-    border-radius: 24px;
-    overflow: hidden;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #f1f5f9;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-
-    &:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-      border-color: #e2e8f0;
-    }
-
-    .image-container {
-      position: relative;
-      height: 260px;
-      background: #f8fafc;
-      overflow: hidden;
-      padding: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        transition: transform 0.5s ease;
-        mix-blend-mode: multiply;
-        /* Helps if images have white backgrounds */
-      }
-
-      .badge {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        padding: 6px 12px;
-        border-radius: 12px;
-        color: white;
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        z-index: 2;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      }
-    }
-
-    &:hover .image-container img {
-      transform: scale(1.08);
-    }
-
-    .product-details {
-      padding: 1.5rem;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-
-      .category-tag {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .product-title {
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin: 0 0 0.5rem 0;
-        line-height: 1.4;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-
-      .product-desc {
-        font-size: 0.875rem;
-        color: #64748b;
-        margin: 0 0 1.5rem 0;
-        line-height: 1.6;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        flex-grow: 1;
-      }
-
-      .product-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: auto;
-        padding-top: 1.25rem;
-        border-top: 1px dashed #e2e8f0;
-
-        .price {
-          font-size: 1.5rem;
-          font-weight: 800;
-          color: #0f172a;
-
-          &::after {
-            content: ' TL';
-            font-size: 1.125rem;
-            color: #64748b;
-            font-weight: 600;
-          }
-        }
-      }
-    }
-  }
-
-  .pagination-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-    padding-top: 2rem;
-    border-top: 1px solid #e2e8f0;
-
-    ::ng-deep .p-paginator {
-      background: transparent;
-      border: none;
-
-      .p-paginator-page,
-      .p-paginator-next,
-      .p-paginator-prev,
-      .p-paginator-first,
-      .p-paginator-last {
-        border-radius: 12px;
-        color: #64748b;
-
-        &.p-highlight {
-          background: #3b82f6;
-          color: white;
-        }
-      }
+      color: $text-muted;
+      font-size: 1.1rem;
     }
   }
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+.glass-input {
+  border-radius: 20px !important;
+  background: $glass-bg !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid $glass-border !important;
+  padding: 0.8rem 1rem 0.8rem 2.5rem !important;
+  width: 300px;
+  transition: all 0.3s;
+
+  &:focus {
+    width: 350px;
+    border-color: $primary-blue !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
   }
 }
 
-@keyframes pulse {
-  50% {
-    opacity: 0.5;
-  }
+// --- Product Grid & Cards ---
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
 }
 
-.product-card {
+.glass-card {
+  background: $glass-bg;
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  border: 1px solid $glass-border;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
   &:hover {
-    .image-container img {
-      transform: scale(1.05);
-    }
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    border-color: $primary-blue;
+  }
+}
+
+.card-image {
+  position: relative;
+  height: 250px;
+  background: white;
+  margin: 1rem;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 1.5rem;
+    transition: transform 0.6s;
   }
 
-  .image-container {
-    background-color: #f8fafc;
-
-    img {
-      mix-blend-mode: multiply; // Beyaz arka planlı ürün resimleri için idealdir
-    }
+  &:hover img {
+    transform: scale(1.1);
   }
 
-  .favorite-btn {
-    width: 2.5rem;
-    height: 2.5rem;
+  .badge-new {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: $gradient;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 10px;
+    z-index: 2;
+  }
+
+  .btn-fav {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: white;
     border: none;
+    border-radius: 50%;
+    color: #ef4444;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    transition: all 0.2s;
 
     &:hover {
       transform: scale(1.1);
+      background: #fee2e2;
     }
   }
+}
 
-  .line-clamp-2 {
+.card-info {
+  padding: 0 1.5rem 1.5rem;
+  flex-grow: 1;
+  cursor: pointer;
+
+  .category-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: $primary-purple;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .product-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-main;
+    margin: 0.5rem 0;
+    line-height: 1.3;
+  }
+
+  .product-desc {
+    font-size: 0.9rem;
+    color: $text-muted;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+}
+
+.card-footer {
+  padding: 1.2rem 1.5rem;
+  background: rgba(255, 255, 255, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+  .price-box {
+    .currency {
+      font-size: 1rem;
+      font-weight: 700;
+      color: $primary-blue;
+      margin-right: 2px;
+    }
+
+    .amount {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: $text-main;
+    }
+  }
+
+  .btn-add-cart {
+    width: 44px;
+    height: 44px;
+    background: $gradient;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+
+    &:hover {
+      transform: rotate(-5deg) scale(1.1);
+      box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+    }
+  }
+}
+
+// --- Pagination ---
+.pagination-panel {
+  padding: 1rem;
+  border-radius: 20px;
+}
+
+::ng-deep .custom-paginator {
+  background: transparent !important;
+  border: none !important;
+
+  .p-paginator-pages .p-paginator-page {
+    border-radius: 10px;
+
+    &.p-highlight {
+      background: $gradient !important;
+      color: white !important;
+    }
+  }
+}
+
+// --- Statuses ---
+.loading-overlay {
+  text-align: center;
+  padding: 5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 5rem;
+
+  i {
+    font-size: 4rem;
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $text-main;
+  }
+
+  p {
+    color: $text-muted;
   }
 }

@@ -1,0 +1,96 @@
+<div class="page-wrapper">
+    <div class="glass-panel">
+
+        <div class="panel-header">
+            <div class="header-content">
+                <h2>Ürün Envanteri</h2>
+                <p>Mağazanızdaki ürünleri yönetin ve stok durumunu takip edin.</p>
+            </div>
+            <button routerLink="add" class="btn-primary">
+                <i class="pi pi-plus"></i>
+                <span>Yeni Ürün Ekle</span>
+            </button>
+        </div>
+
+        <div *ngIf="error" class="error-alert">
+            <i class="pi pi-exclamation-circle"></i>
+            {{ error }}
+        </div>
+
+        <!-- Skeleton veya Yükleniyor Durumu -->
+        <div *ngIf="loading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Ürünler getiriliyor...</p>
+        </div>
+
+        <!-- Boş Liste -->
+        <div *ngIf="!loading && products.length === 0" class="empty-state">
+            <i class="pi pi-box"></i>
+            <p>Henüz hiç ürün eklemediniz.</p>
+            <button routerLink="add" class="btn-outline">İlk Ürününü Ekle</button>
+        </div>
+
+        <!-- Ürün Tablosu -->
+        <div *ngIf="!loading && products.length > 0" class="table-container">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Ürün Bilgisi</th>
+                        <th>Taban Fiyat</th>
+                        <th>Durum</th>
+                        <th class="text-right">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let product of products">
+                        <td>
+                            <div class="product-info">
+                                <span class="product-name">{{ product.name }}</span>
+                                <span class="product-id">ID: {{ product.id.substring(0,8) }}...</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="price-tag">{{ product.basePrice | currency:'TRY':'symbol-narrow' }}</span>
+                        </td>
+                        <td>
+                            <span class="status-badge" [ngClass]="product.isActive ? 'active' : 'passive'">
+                                {{ product.isActive ? 'Aktif' : 'Pasif' }}
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <div class="action-buttons">
+                                <button class="btn-icon edit" title="Düzenle">
+                                    <i class="pi pi-pencil"></i>
+                                </button>
+                                <button (click)="deleteProduct(product.id)" class="btn-icon delete" title="Sil">
+                                    <i class="pi pi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sayfalama (Pagination) -->
+        <div *ngIf="!loading && totalPages > 1" class="pagination-container">
+            <div class="total-info">Toplam <b>{{ totalElements }}</b> ürün</div>
+
+            <div class="pagination-controls">
+                <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 0" class="btn-page">
+                    <i class="pi pi-angle-left"></i>
+                </button>
+
+                <span class="page-info">
+                    Sayfa <b>{{ currentPage + 1 }}</b> / {{ totalPages }}
+                </span>
+
+                <button (click)="changePage(currentPage + 1)" [disabled]="currentPage >= totalPages - 1"
+                    class="btn-page">
+                    <i class="pi pi-angle-right"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

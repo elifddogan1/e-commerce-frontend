@@ -1,0 +1,273 @@
+$primary-blue: #3b82f6;
+$primary-purple: #8b5cf6;
+$gradient: linear-gradient(135deg, $primary-blue 0%, $primary-purple 100%);
+$glass-bg: rgba(255, 255, 255, 0.85);
+$text-main: #1e293b;
+$text-muted: #64748b;
+
+.page-wrapper {
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+    background: linear-gradient(135deg, #f0f4ff 0%, #f5f3ff 100%);
+    display: flex;
+    justify-content: center;
+}
+
+.checkout-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+
+    @media (min-width: 992px) {
+        grid-template-columns: 1.8fr 1fr;
+    }
+}
+
+.glass-panel {
+    background: $glass-bg;
+    backdrop-filter: blur(16px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    padding: 2.5rem;
+}
+
+// Step Indicator (Progress)
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3rem;
+    gap: 1rem;
+
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        .num {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: $text-muted;
+            transition: all 0.3s;
+        }
+
+        .lbl {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: $text-muted;
+        }
+
+        &.active {
+            .num {
+                border-color: $primary-blue;
+                color: $primary-blue;
+                box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+            }
+
+            .lbl {
+                color: $primary-blue;
+            }
+        }
+
+        &.completed .num {
+            background: $primary-blue;
+            color: white;
+            border-color: $primary-blue;
+        }
+    }
+
+    .line {
+        width: 60px;
+        height: 2px;
+        background: #e2e8f0;
+        margin-bottom: 20px;
+    }
+}
+
+.step-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: $text-main;
+
+    i {
+        color: $primary-blue;
+    }
+}
+
+// Address Cards
+.address-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.address-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 2px solid #f1f5f9;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    &.selected {
+        border-color: $primary-blue;
+        background: rgba(59, 130, 246, 0.02);
+    }
+
+    .card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .addr-title {
+            font-weight: 800;
+            color: $text-main;
+        }
+    }
+
+    .addr-details p {
+        margin: 0;
+        color: $text-muted;
+        font-size: 0.95rem;
+    }
+}
+
+// Stripe Form
+.stripe-form-wrapper {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+
+    .stripe-card-container {
+        padding: 1rem;
+        border: 1px solid #f1f5f9;
+        border-radius: 12px;
+    }
+
+    .secure-badge {
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        color: #10b981;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+}
+
+// Sidebar (Summary)
+.summary-panel {
+    position: sticky;
+    top: 2rem;
+
+    h3 {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+    }
+
+    .item-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+        color: $text-muted;
+    }
+
+    .summary-totals {
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+
+            &.total {
+                margin-top: 1rem;
+                font-size: 1.3rem;
+                font-weight: 900;
+                color: $text-main;
+
+                .amount {
+                    color: $primary-blue;
+                }
+            }
+
+            .free {
+                color: #10b981;
+            }
+        }
+    }
+}
+
+// Buttons
+.btn-primary,
+.btn-success {
+    background: $gradient;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+    }
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.btn-text {
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover {
+        color: $primary-blue;
+    }
+}
+
+.action-bar {
+    display: flex;
+    justify-content: flex-end;
+
+    &.between {
+        justify-content: space-between;
+    }
+}

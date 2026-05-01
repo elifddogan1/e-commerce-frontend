@@ -1,113 +1,109 @@
-<div class="seller-dashboard">
-  <header class="dashboard-header">
-    <div class="header-content">
-      <h1>Mağaza Siparişleri</h1>
-      <p class="subtitle">Mağazanıza gelen tüm siparişleri buradan yönetebilirsiniz.</p>
-    </div>
-    <div class="header-actions">
+<div class="page-wrapper">
+  <div class="glass-panel">
+
+    <header class="panel-header">
+      <div class="header-content">
+        <h2>Mağaza Siparişleri</h2>
+        <p>Gelen siparişleri yönetin ve durumlarını güncelleyin.</p>
+      </div>
       <button class="btn-refresh" (click)="fetchOrders()" [disabled]="loading">
         <i class="pi pi-refresh" [class.pi-spin]="loading"></i>
-        Yenile
+        <span>Yenile</span>
       </button>
-    </div>
-  </header>
+    </header>
 
-  <div class="dashboard-content">
-    <!-- Loading State -->
+    <!-- Durum Mesajları -->
     <div *ngIf="loading" class="loading-state">
-      <i class="pi pi-spin pi-spinner text-4xl text-primary"></i>
-      <p>Siparişler yükleniyor...</p>
+      <div class="spinner"></div>
+      <p>Siparişler hazırlanıyor...</p>
     </div>
 
-    <!-- Error State -->
-    <div *ngIf="error" class="error-state">
-      <i class="pi pi-exclamation-circle text-4xl text-red-500"></i>
-      <p>{{ error }}</p>
-      <button class="btn-retry" (click)="fetchOrders()">Tekrar Dene</button>
+    <div *ngIf="error" class="error-alert">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ error }}</span>
+      <button (click)="fetchOrders()">Tekrar Dene</button>
     </div>
 
-    <!-- Empty State -->
-    <div *ngIf="!loading && !error && orders.length === 0" class="empty-state text-center py-12">
-      <div class="empty-icon-container">
-        <i class="pi pi-shopping-bag text-6xl text-gray-300"></i>
+    <div *ngIf="!loading && !error && orders.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <i class="pi pi-shopping-cart"></i>
       </div>
-      <h3 class="text-xl font-medium mt-4">Henüz sipariş yok</h3>
-      <p class="text-gray-500">Mağazanıza bir sipariş geldiğinde burada görünecektir.</p>
+      <h3>Henüz sipariş yok</h3>
+      <p>Mağazanıza bir sipariş geldiğinde burada listelenecektir.</p>
     </div>
 
-    <!-- Orders Table -->
-    <div *ngIf="!loading && !error && orders.length > 0" class="orders-container">
-      <div class="table-responsive">
-        <table class="orders-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Sipariş No</th>
-              <th>Tarih</th>
-              <th>Toplam</th>
-              <th>Durum</th>
-              <th class="text-right">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngFor="let order of orders">
-              <tr class="order-row" [class.expanded]="isExpanded(order.id)">
-                <td class="toggle-cell">
-                  <button class="btn-toggle" (click)="toggleOrderDetails(order.id)">
-                    <i class="pi" [ngClass]="isExpanded(order.id) ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
-                  </button>
-                </td>
-                <td class="order-id">
-                  <span class="id-badge">#{{ order.id.substring(0, 8) }}</span>
-                </td>
-                <td class="order-date">
-                  {{ order.createdAt | date:'mediumDate' }}
+    <!-- Sipariş Listesi -->
+    <div *ngIf="!loading && !error && orders.length > 0" class="table-container">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th style="width: 50px;"></th>
+            <th>Sipariş No</th>
+            <th>Tarih</th>
+            <th>Toplam</th>
+            <th>Durum</th>
+            <th class="text-right">İşlemler</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let order of orders">
+            <tr class="order-row" [class.expanded]="isExpanded(order.id)">
+              <td>
+                <button class="btn-toggle" (click)="toggleOrderDetails(order.id)">
+                  <i class="pi" [ngClass]="isExpanded(order.id) ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+                </button>
+              </td>
+              <td class="order-id">
+                <span class="id-tag">#{{ order.id.substring(0, 8) }}</span>
+              </td>
+              <td class="order-date">
+                <div class="date-box">
+                  <span class="date">{{ order.createdAt | date:'mediumDate' }}</span>
                   <span class="time">{{ order.createdAt | date:'shortTime' }}</span>
-                </td>
-                <td class="order-total">
-                  <span class="amount">{{ order.total | currency:'TRY':'symbol-narrow':'1.2-2' }}</span>
-                </td>
-                <td>
-                  <span class="status-badge" [ngClass]="getStatusClass(order.status)">
-                    {{ getStatusLabel(order.status) }}
-                  </span>
-                </td>
-                <td class="text-right actions-cell">
-                  <div class="action-dropdown">
-                    <select 
-                      [value]="order.status" 
-                      (change)="updateStatus(order.id, $any($event.target).value); $event.stopPropagation()"
-                      class="status-select"
-                    >
-                      <option *ngFor="let opt of statusOptions" [value]="opt.value">
-                        {{ opt.label }}
-                      </option>
-                    </select>
-                  </div>
-                </td>
-              </tr>
-              <!-- Order Items (Expanded) -->
-              <tr *ngIf="isExpanded(order.id)" class="items-row">
-                <td colspan="6">
-                  <div class="items-detail">
-                    <h4>Sipariş İçeriği</h4>
-                    <div class="items-list">
-                      <div *ngFor="let item of order.items" class="order-item">
-                        <div class="item-info">
-                          <span class="item-name">{{ item.productName }}</span>
-                          <span class="item-variant">{{ item.variantName }}</span>
-                        </div>
-                        <div class="item-quantity">x {{ item.quantity }}</div>
-                        <div class="item-price">{{ item.lineTotal | currency:'TRY':'symbol-narrow':'1.2-2' }}</div>
+                </div>
+              </td>
+              <td class="order-total">
+                <span class="price">{{ order.total | currency:'TRY':'symbol-narrow':'1.2-2' }}</span>
+              </td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                  {{ getStatusLabel(order.status) }}
+                </span>
+              </td>
+              <td class="text-right">
+                <select [value]="order.status" (change)="updateStatus(order.id, $any($event.target).value)"
+                  class="custom-select">
+                  <option *ngFor="let opt of statusOptions" [value]="opt.value">
+                    {{ opt.label }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+
+            <!-- Detay Satırı (Ürünler) -->
+            <tr *ngIf="isExpanded(order.id)" class="details-row">
+              <td colspan="6">
+                <div class="items-container shadow-inner">
+                  <h4 class="items-title"><i class="pi pi-list"></i> Sipariş İçeriği</h4>
+                  <div class="items-list">
+                    <div *ngFor="let item of order.items" class="order-item">
+                      <div class="item-main">
+                        <span class="item-name">{{ item.productName }}</span>
+                        <span class="item-variant" *ngIf="item.variantName">{{ item.variantName }}</span>
+                      </div>
+                      <div class="item-meta">
+                        <span class="item-qty">x{{ item.quantity }}</span>
+                        <span class="item-price">{{ item.lineTotal | currency:'TRY':'symbol-narrow' }}</span>
                       </div>
                     </div>
                   </div>
-                </td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </table>
-      </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
     </div>
+
   </div>
 </div>

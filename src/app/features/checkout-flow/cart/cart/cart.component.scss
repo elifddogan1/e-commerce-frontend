@@ -1,0 +1,220 @@
+$primary-blue: #3b82f6;
+$primary-purple: #8b5cf6;
+$gradient: linear-gradient(135deg, $primary-blue 0%, $primary-purple 100%);
+$glass-bg: rgba(255, 255, 255, 0.8);
+$text-main: #1e293b;
+$text-muted: #64748b;
+
+.page-wrapper {
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+    background: linear-gradient(135deg, #f0f4ff 0%, #f5f3ff 100%);
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.cart-header {
+    margin-bottom: 2.5rem;
+
+    h2 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: $gradient;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        color: $text-muted;
+        font-size: 1.1rem;
+    }
+}
+
+// Layout
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: flex-start;
+
+    @media (min-width: 992px) {
+        grid-template-columns: 1.8fr 1fr;
+    }
+}
+
+.glass-panel {
+    background: $glass-bg;
+    backdrop-filter: blur(16px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    padding: 2rem;
+}
+
+// Ürün Listesi
+.items-panel {
+    .items-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        margin-bottom: 1rem;
+
+        span {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: $text-main;
+        }
+
+        .btn-text {
+            background: none;
+            border: none;
+            color: $primary-blue;
+            font-weight: 600;
+            cursor: pointer;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+// Özet Kartı (Sticky)
+.summary-card {
+    position: sticky;
+    top: 100px;
+
+    h3 {
+        font-size: 1.4rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        color: $text-main;
+    }
+
+    .summary-details {
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: $text-muted;
+
+            &.total {
+                margin-top: 1rem;
+                color: $text-main;
+
+                .total-amount {
+                    font-size: 1.8rem;
+                    font-weight: 900;
+                    color: $primary-blue;
+                }
+            }
+
+            .text-free {
+                color: #10b981;
+                font-weight: 800;
+            }
+        }
+    }
+
+    .btn-checkout {
+        width: 100%;
+        margin-top: 2rem;
+        background: $gradient;
+        color: white;
+        border: none;
+        padding: 1.25rem;
+        border-radius: 16px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+        transition: all 0.3s;
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3);
+        }
+    }
+
+    .security-info {
+        margin-top: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: $text-muted;
+
+        i {
+            color: #10b981;
+        }
+    }
+}
+
+// Boş Durum
+.empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+
+    .empty-icon-box {
+        width: 100px;
+        height: 100px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+
+        i {
+            font-size: 3rem;
+            color: #cbd5e1;
+        }
+    }
+
+    h3 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        color: $text-muted;
+        margin-bottom: 2rem;
+    }
+}
+
+.btn-primary {
+    background: $gradient;
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+    }
+}
+
+.loading-box {
+    text-align: center;
+    padding: 5rem;
+    color: $primary-blue;
+}
