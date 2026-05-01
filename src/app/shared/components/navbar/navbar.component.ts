@@ -48,7 +48,14 @@ export class NavbarComponent implements OnInit {
   }
 
   buildMenu(): void {
-    if (this.authService.isSeller()) {
+    if (this.authService.isAdmin()) {
+      // Admin Menüsü
+      this.items = [
+        { label: 'Admin Dashboard', icon: 'pi pi-chart-line', routerLink: ['/admin/dashboard'] },
+        { label: 'Kategoriler', icon: 'pi pi-tags', routerLink: ['/admin/categories'] },
+        { label: 'Satıcı Onayları', icon: 'pi pi-user-plus', routerLink: ['/admin/seller-approvals'] }
+      ];
+    } else if (this.authService.isSeller()) {
       // Satıcı Menüsü
       this.items = [
         { label: 'Dashboard', icon: 'pi pi-chart-bar', routerLink: ['/seller-panel/dashboard'] },

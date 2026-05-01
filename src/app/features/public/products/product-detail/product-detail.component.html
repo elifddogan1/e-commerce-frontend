@@ -36,7 +36,8 @@
 
                 <p-divider></p-divider>
 
-                <div class="selection-section" *ngIf="product.variants?.length">
+                <!-- Düzenlenen Satır: .? operatörü kaldırıldı -->
+                <div class="selection-section" *ngIf="product.variants.length">
                     <label class="section-label">Seçenek Seçin</label>
                     <p-select [options]="product.variants" [(ngModel)]="selectedVariant" optionLabel="name"
                         placeholder="Bir seçenek belirleyin" styleClass="custom-select">

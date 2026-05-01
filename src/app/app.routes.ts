@@ -18,20 +18,20 @@ export const routes: Routes = [
     redirectTo: 'products'
   },
 
-  // Public Ürünler (SELLER GİREMEZ)
+  // Public Ürünler (SELLER VE ADMIN GİREMEZ)
   {
     path: 'products',
     title: 'Ürünler | E-Ticaret',
     component: ProductListComponent,
     canActivate: [authGuard],
-    data: { forbiddenRoles: ['SELLER'] } // Satıcılar kendi paneline yönlendirilmeli
+    data: { forbiddenRoles: ['SELLER', 'ADMIN'] }
   },
   {
     path: 'products/:id',
     title: 'Ürün Detayı | E-Ticaret',
     component: ProductDetailComponent,
     canActivate: [authGuard],
-    data: { forbiddenRoles: ['SELLER'] }
+    data: { forbiddenRoles: ['SELLER', 'ADMIN'] }
   },
 
   // Auth
@@ -40,7 +40,7 @@ export const routes: Routes = [
     children: AUTH_ROUTES
   },
 
-  // Sepet
+  // Sepet (Sadece USER görebilir)
   {
     path: 'cart',
     title: 'Sepetim | E-Ticaret',
@@ -49,7 +49,7 @@ export const routes: Routes = [
     data: { forbiddenRoles: ['SELLER', 'ADMIN'] }
   },
 
-  // Checkout 
+  // Checkout (Sadece USER işlem yapabilir)
   {
     path: 'checkout',
     title: 'Siparişi Tamamla | E-Ticaret',
@@ -80,6 +80,15 @@ export const routes: Routes = [
     loadChildren: () => import('./features/seller-panel/seller-panel.routes').then(m => m.SELLER_PANEL_ROUTES)
   },
 
+  // Admin Paneli
+  {
+    path: 'admin',
+    canActivate: [authGuard],
+    data: { requiredRoles: ['ADMIN'] },
+    loadChildren: () => import('./features/admin-panel/admin-panel.routes').then(m => m.ADMIN_PANEL_ROUTES)
+  },
+
+  // Wildcard Route - Bulunamayan sayfaları ana sayfaya atar
   {
     path: '**',
     redirectTo: 'products'

@@ -3,7 +3,8 @@
 
         <!-- LOGO Bölümü -->
         <ng-template pTemplate="start">
-            <div class="brand" [routerLink]="authService.isSeller() ? '/seller-panel/dashboard' : '/products'">
+            <div class="brand"
+                [routerLink]="authService.isAdmin() ? '/admin/dashboard' : (authService.isSeller() ? '/seller-panel/dashboard' : '/products')">
                 <div class="logo-icon">
                     <i class="pi pi-bolt"></i>
                 </div>
@@ -15,14 +16,14 @@
         <ng-template pTemplate="end">
             <div class="nav-actions">
 
-                <!-- Arama (Müşteriler için) -->
-                <div class="search-box" *ngIf="!authService.isSeller()">
+                <!-- Arama (Sadece Normal Kullanıcılar ve Ziyaretçiler için) -->
+                <div class="search-box" *ngIf="!authService.isSeller() && !authService.isAdmin()">
                     <i class="pi pi-search"></i>
                     <input type="text" pInputText placeholder="Ürün ara..." class="p-inputtext-sm" />
                 </div>
 
-                <!-- Sepet -->
-                <div class="cart-wrapper" *ngIf="authService.showCartIcon()">
+                <!-- Sepet (Satıcılar ve Adminler Göremez) -->
+                <div class="cart-wrapper" *ngIf="authService.showCartIcon() && !authService.isAdmin()">
                     <button class="nav-btn-icon" routerLink="/cart">
                         <i class="pi pi-shopping-cart"></i>
                         <span class="cart-badge" *ngIf="cartItemCount > 0">{{ cartItemCount }}</span>
@@ -33,12 +34,21 @@
                 <div class="auth-group">
                     <ng-container *ngIf="authService.isLoggedIn(); else guestButtons">
 
+                        <!-- Profil / Panel Butonu -->
                         <button class="nav-btn-profile"
-                            [routerLink]="authService.isSeller() ? '/seller-panel/dashboard' : '/profile'">
-                            <i [class]="authService.isSeller() ? 'pi pi-store' : 'pi pi-user'"></i>
-                            <span class="hidden-mobile">{{ authService.isSeller() ? 'Panelim' : 'Profilim' }}</span>
+                            [routerLink]="authService.isAdmin() ? '/admin/dashboard' : (authService.isSeller() ? '/seller-panel/dashboard' : '/profile')">
+                            <!-- Role Göre Dinamik İkon -->
+                            <i
+                                [class]="authService.isAdmin() ? 'pi pi-shield' : (authService.isSeller() ? 'pi pi-store' : 'pi pi-user')"></i>
+
+                            <!-- Role Göre Dinamik Metin -->
+                            <span class="hidden-mobile">
+                                {{ authService.isAdmin() ? 'Admin Paneli' : (authService.isSeller() ? 'Panelim' :
+                                'Profilim') }}
+                            </span>
                         </button>
 
+                        <!-- Çıkış Butonu -->
                         <button class="nav-btn-logout" (click)="authService.logout()">
                             <i class="pi pi-sign-out"></i>
                         </button>
