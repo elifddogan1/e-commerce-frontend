@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ElementRef, AfterViewChecked, PLATFORM_ID } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, AfterViewChecked, PLATFORM_ID, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService, ChatResponse } from '../../services/chat.service';
@@ -22,6 +22,8 @@ export class ChatbotComponent implements AfterViewChecked {
   private chatService = inject(ChatService);
   public authService = inject(AuthService);
   private platformId = inject(PLATFORM_ID);
+  private cdr = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   @ViewChild('messageInput') private messageInput!: ElementRef;
@@ -40,7 +42,6 @@ export class ChatbotComponent implements AfterViewChecked {
     this.isOpen = !this.isOpen;
 
     if (this.isOpen && this.messages.length === 0) {
-      // Hoş geldin mesajı
       const role = this.authService.getRole();
       let greeting = 'Merhaba! 👋 Size nasıl yardımcı olabilirim?';
 
@@ -62,7 +63,6 @@ export class ChatbotComponent implements AfterViewChecked {
       });
     }
 
-    // Focus input after opening
     if (this.isOpen) {
       setTimeout(() => {
         this.messageInput?.nativeElement?.focus();
@@ -74,43 +74,49 @@ export class ChatbotComponent implements AfterViewChecked {
     const msg = this.userMessage.trim();
     if (!msg || this.isLoading) return;
 
-    // Kullanıcı mesajını ekle
-    this.messages.push({
+    this.messages = [...this.messages, {
       role: 'user',
       content: msg,
       timestamp: new Date()
-    });
+    }];
 
     this.userMessage = '';
     this.isLoading = true;
     this.shouldScroll = true;
+    this.cdr.detectChanges();
 
     this.chatService.sendMessage(msg).subscribe({
       next: (response: ChatResponse) => {
-        this.messages.push({
-          role: 'assistant',
-          content: response.reply,
-          toolsUsed: response.toolsUsed,
-          timestamp: new Date()
+        this.ngZone.run(() => {
+          this.messages = [...this.messages, {
+            role: 'assistant',
+            content: response.reply,
+            toolsUsed: response.toolsUsed,
+            timestamp: new Date()
+          }];
+          this.isLoading = false;
+          this.shouldScroll = true;
+          this.cdr.detectChanges();
         });
-        this.isLoading = false;
-        this.shouldScroll = true;
       },
       error: (err) => {
-        console.error('Chat hatası:', err);
-        let errorMsg = 'Bir hata oluştu. Lütfen tekrar deneyin.';
-        if (err.status === 401) {
-          errorMsg = 'Oturumunuz sona ermiş. Lütfen tekrar giriş yapın.';
-        } else if (err.status === 0) {
-          errorMsg = 'Sunucuya bağlanılamadı. Backend çalışıyor mu?';
-        }
-        this.messages.push({
-          role: 'system',
-          content: errorMsg,
-          timestamp: new Date()
+        this.ngZone.run(() => {
+          console.error('Chat hatası:', err);
+          let errorMsg = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+          if (err.status === 401) {
+            errorMsg = 'Oturumunuz sona ermiş. Lütfen tekrar giriş yapın.';
+          } else if (err.status === 0) {
+            errorMsg = 'Sunucuya bağlanılamadı. Backend çalışıyor mu?';
+          }
+          this.messages = [...this.messages, {
+            role: 'system',
+            content: errorMsg,
+            timestamp: new Date()
+          }];
+          this.isLoading = false;
+          this.shouldScroll = true;
+          this.cdr.detectChanges();
         });
-        this.isLoading = false;
-        this.shouldScroll = true;
       }
     });
   }
@@ -118,20 +124,23 @@ export class ChatbotComponent implements AfterViewChecked {
   clearChat(): void {
     this.chatService.clearHistory().subscribe({
       next: () => {
-        this.messages = [];
-        this.messages.push({
-          role: 'assistant',
-          content: 'Konuşma sıfırlandı. Size nasıl yardımcı olabilirim? 😊',
-          timestamp: new Date()
+        this.ngZone.run(() => {
+          this.messages = [{
+            role: 'assistant',
+            content: 'Konuşma sıfırlandı. Size nasıl yardımcı olabilirim? 😊',
+            timestamp: new Date()
+          }];
+          this.cdr.detectChanges();
         });
       },
       error: () => {
-        // Sunucu hatası olsa bile yerel geçmişi temizle
-        this.messages = [];
-        this.messages.push({
-          role: 'assistant',
-          content: 'Konuşma sıfırlandı.',
-          timestamp: new Date()
+        this.ngZone.run(() => {
+          this.messages = [{
+            role: 'assistant',
+            content: 'Konuşma sıfırlandı.',
+            timestamp: new Date()
+          }];
+          this.cdr.detectChanges();
         });
       }
     });
