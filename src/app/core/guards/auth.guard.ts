@@ -12,7 +12,13 @@ export const authGuard: CanActivateFn = (route, state) => {
   const isAuthPage = route.data['isAuthPage'] as boolean;
 
   const isLoggedIn = authService.isLoggedIn();
-  const userRole = authService.getRole()?.toUpperCase() || '';
+  const rawRole = authService.getRole();
+  
+  // Rolü string'e çeviriyoruz (Spring Boot'tan 'ROLE_ADMIN' veya [{authority: 'ROLE_ADMIN'}] gelebilir)
+  const userRole = (typeof rawRole === 'string' 
+    ? rawRole 
+    : JSON.stringify(rawRole || '')
+  ).toUpperCase();
 
   // --- 1. DURUM: GİRİŞ YAPILMAMIŞ (MİSAFİR) ---
   if (!isLoggedIn) {
