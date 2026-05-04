@@ -45,7 +45,7 @@ export class ProductListComponent implements OnInit {
   loading: boolean = true;
 
   currentPage: number = 0;
-  pageSize: number = 12;
+  pageSize: number = 25;
 
   ngOnInit(): void {
     this.loadProducts();

@@ -20,7 +20,7 @@ export class StoreInventoryComponent implements OnInit {
   error: string | null = null;
 
   currentPage = 0;
-  pageSize = 10;
+  pageSize = 25;
   totalPages = 0;
   totalElements = 0;
 
