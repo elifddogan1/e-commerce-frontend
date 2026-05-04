@@ -5,17 +5,8 @@ import { CheckoutPageComponent } from 'src/app/features/checkout-flow/pages/chec
 import { ProductDetailComponent } from 'src/app/features/public/products/product-detail/product-detail.component';
 import { ProductListComponent } from 'src/app/features/public/products/product-list/product-list.component';
 import { MyAddressesComponent } from 'src/app/features/user-panel/my-addresses/my-addresses/my-addresses.component';
-// import { MyAddressesComponent} from './features/user-panel/m
 import { authGuard } from './core/guards/auth.guard';
-// // Bileşen Importları
-// import { ProductListComponent } from './features/public/products/product-list/product-list.component';
-// import { ProductDetailComponent } from './features/public/products/product-detail/product-detail.component';
-// import { CartComponent } from './features/checkout-flow/cart/cart/cart.component';
-// import { CheckoutPageComponent } from './features/checkout-flow/pages/checkout-page/checkout-page.component';
-
-// // Core & Guard
-// import { authGuard } from './core.*';
-// import { AUTH_ROUTES } from './features/auth/auth.routes';
+import { MyOrdersComponent } from './features/user-panel/my-orders/my-orders.component';
 
 export const routes: Routes = [
   {
@@ -70,6 +61,16 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { requiredRoles: ['USER'] },
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'my-orders'
+      },
+      {
+        path: 'my-orders',
+        title: 'Siparişlerim | E-Ticaret',
+        component: MyOrdersComponent
+      },
       {
         path: 'my-addresses',
         title: 'Adreslerim | E-Ticaret',

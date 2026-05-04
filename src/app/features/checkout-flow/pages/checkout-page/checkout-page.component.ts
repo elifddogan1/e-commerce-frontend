@@ -135,6 +135,7 @@ export class CheckoutPageComponent implements OnInit {
     this.paymentService.confirmPayment(ids, paymentId).subscribe({
       next: () => {
         this.cartService.clearLocalCartState();
+        this.orderService.clearCache();
         this.messageService.add({ severity: 'success', summary: 'Başarılı', detail: 'Ödemeniz onaylandı!' });
         setTimeout(() => this.router.navigate(['/user-panel/my-orders']), 2000);
       },

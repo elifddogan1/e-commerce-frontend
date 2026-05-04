@@ -36,7 +36,7 @@
 
                         <!-- Profil / Panel Butonu -->
                         <button class="nav-btn-profile"
-                            [routerLink]="authService.isAdmin() ? '/admin/dashboard' : (authService.isSeller() ? '/seller-panel/dashboard' : '/profile')">
+                            [routerLink]="authService.isAdmin() ? '/admin/dashboard' : (authService.isSeller() ? '/seller-panel/dashboard' : '/user-panel/my-orders')">
                             <!-- Role Göre Dinamik İkon -->
                             <i
                                 [class]="authService.isAdmin() ? 'pi pi-shield' : (authService.isSeller() ? 'pi pi-store' : 'pi pi-user')"></i>

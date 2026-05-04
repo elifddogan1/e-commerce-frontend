@@ -1,0 +1,136 @@
+<div class="orders-container">
+  <div class="glass-header">
+    <div class="header-info">
+      <h1>Siparişlerim</h1>
+      <p>Geçmiş ve aktif tüm siparişlerinizi buradan takip edebilirsiniz.</p>
+    </div>
+    <button pButton icon="pi pi-refresh" label="Yenile" class="p-button-rounded p-button-text"
+      (click)="fetchOrders(true)" [disabled]="loading"></button>
+  </div>
+
+  <div class="content-card">
+    <!-- Loading State (Skeleton) -->
+    <div *ngIf="loading" class="table-wrapper">
+      <p-table [value]="[1,2,3,4,5]" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem"></th>
+            <th>Sipariş No</th>
+            <th>Tarih</th>
+            <th>Toplam</th>
+            <th>Durum</th>
+            <th class="text-right">İşlem</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body">
+          <tr>
+            <td><p-skeleton shape="circle" size="2rem"></p-skeleton></td>
+            <td><p-skeleton width="8rem"></p-skeleton></td>
+            <td><p-skeleton width="6rem"></p-skeleton></td>
+            <td><p-skeleton width="5rem"></p-skeleton></td>
+            <td><p-skeleton width="4rem" borderRadius="16px"></p-skeleton></td>
+            <td class="text-right"><p-skeleton width="3rem" styleClass="ml-auto"></p-skeleton></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="state-container error">
+      <i class="pi pi-exclamation-circle" style="font-size: 2rem"></i>
+      <p>{{ error }}</p>
+      <button pButton label="Tekrar Dene" class="p-button-outlined" (click)="fetchOrders()"></button>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && orders.length === 0" class="state-container empty">
+      <i class="pi pi-shopping-bag" style="font-size: 3rem"></i>
+      <h3>Henüz bir siparişiniz yok</h3>
+      <p>Hemen alışverişe başlayıp harika ürünler keşfedin!</p>
+      <button pButton label="Ürünlere Göz At" icon="pi pi-search" routerLink="/products"></button>
+    </div>
+
+    <!-- Orders Table -->
+    <div *ngIf="!loading && !error && orders.length > 0" class="table-wrapper">
+      <p-table [value]="orders" dataKey="id" [responsiveLayout]="'stack'" [breakpoint]="'960px'"
+        styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem"></th>
+            <th>Sipariş No</th>
+            <th>Tarih</th>
+            <th>Toplam</th>
+            <th>Durum</th>
+            <th class="text-right">İşlem</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order let-expanded="expanded">
+          <tr class="order-row">
+            <td>
+              <button type="button" pButton pRipple [pRowToggler]="order"
+                class="p-button-text p-button-rounded p-button-plain"
+                [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+            </td>
+            <td>
+              <span class="order-id-chip">#{{ order.id.substring(0, 8) }}</span>
+            </td>
+            <td>{{ order.createdAt | date:'dd.MM.yyyy HH:mm' }}</td>
+            <td class="total-amount">{{ order.total | currency:'TRY':'symbol-narrow':'1.2-2' }}</td>
+            <td>
+              <p-tag [value]="getStatusLabel(order.status)" [severity]="getStatusSeverity(order.status)"
+                [rounded]="true"></p-tag>
+            </td>
+            <td class="text-right">
+              <div class="action-group">
+                <button pButton icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger"
+                  label="İptal Et" *ngIf="canCancel(order.status)" (click)="cancelOrder(order.id)"></button>
+                <button pButton icon="pi pi-eye" class="p-button-rounded p-button-text" label="Detay"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+        <!-- Expanded Row (Items) -->
+        <ng-template pTemplate="rowexpansion" let-order>
+          <tr>
+            <td colspan="6">
+              <div class="expansion-content">
+                <h3>Sipariş İçeriği</h3>
+                <div class="items-grid">
+                  <div *ngFor="let item of order.items" class="order-item-card">
+                    <div class="item-info">
+                      <span class="item-name">{{ item.productName }}</span>
+                      <span class="item-variant" *ngIf="item.variantName">{{ item.variantName }}</span>
+                    </div>
+                    <div class="item-details">
+                      <span class="item-qty">{{ item.quantity }} Adet</span>
+                      <span class="item-price">{{ item.lineTotal | currency:'TRY':'symbol-narrow':'1.2-2' }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="order-summary-footer">
+                  <div class="summary-line">
+                    <span>Ara Toplam:</span>
+                    <span>{{ order.subtotal | currency:'TRY':'symbol-narrow':'1.2-2' }}</span>
+                  </div>
+                  <div class="summary-line">
+                    <span>Kargo:</span>
+                    <span>{{ order.shippingCost | currency:'TRY':'symbol-narrow':'1.2-2' }}</span>
+                  </div>
+                  <div class="summary-line grand-total">
+                    <span>Genel Toplam:</span>
+                    <span>{{ order.total | currency:'TRY':'symbol-narrow':'1.2-2' }}</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
