@@ -11,11 +11,12 @@ export interface ProductDTO {
   id: string;
   name: string;
   description: string;
-  basePrice: number; // JSON'da "basePrice" olarak geliyor
+  imageUrl: string | null;
+  basePrice: number;
   isActive: boolean;
   categoryId: string;
   storeId: string;
-  variants: ProductVariantDTO[]; // JSON'da "variants" dizisi var
+  variants: ProductVariantDTO[];
 }
 
 export interface ProductVariantDTO {
@@ -23,8 +24,9 @@ export interface ProductVariantDTO {
   name: string;
   price: number;
   stockQuantity: number;
-  imageUrl: string | null; // Senin JSON'da şu an null geliyor
+  imageUrl: string | null;
 }
+
 export interface PageProductDTO {
   totalElements: number;
   totalPages: number;
@@ -49,6 +51,7 @@ export interface VariantCreateRequest {
 export interface ProductCreateRequest {
   name: string;
   description: string;
+  imageUrl: string;
   basePrice: number;
   categoryId: string;
   variants: VariantCreateRequest[];
@@ -57,6 +60,7 @@ export interface ProductCreateRequest {
 export interface ProductUpdateRequest {
   name: string;
   description?: string;
+  imageUrl?: string;
   price: number;
   stockQuantity: number;
   categoryId: string;

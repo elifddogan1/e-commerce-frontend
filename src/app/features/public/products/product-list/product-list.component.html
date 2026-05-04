@@ -41,7 +41,7 @@
             </button>
 
             <img
-              [src]="product.variants && product.variants[0]?.imageUrl ? product.variants[0].imageUrl : 'assets/no-image.png'"
+              [src]="product.imageUrl ? product.imageUrl : (product.variants && product.variants[0]?.imageUrl ? product.variants[0].imageUrl : 'assets/no-image.png')"
               [alt]="product.name">
           </div>
 

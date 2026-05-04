@@ -10,7 +10,6 @@
             <!-- Temel Bilgiler -->
             <div class="form-grid">
                 <div class="input-group">
-                    <!-- Etiketlerin input doluyken yukarı çıkması için "required" özelliği CSS seçicilerinde kullanılıyor -->
                     <input type="text" formControlName="name" required>
                     <label>Ürün Adı*</label>
                     <span class="bar"></span>
@@ -21,6 +20,12 @@
                     <label>Taban Fiyat (₺)*</label>
                     <span class="bar"></span>
                 </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" formControlName="imageUrl">
+                <label>Ana Ürün Görsel URL'si</label>
+                <span class="bar"></span>
             </div>
 
             <div class="input-group">
@@ -51,6 +56,9 @@
                     </div>
                     <div class="variant-input">
                         <input type="text" formControlName="sku" placeholder="SKU Kodu" required>
+                    </div>
+                    <div class="variant-input">
+                        <input type="text" formControlName="imageUrl" placeholder="Görsel URL">
                     </div>
                     <div class="variant-input">
                         <input type="number" formControlName="price" placeholder="Fiyat" required>

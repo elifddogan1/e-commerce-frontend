@@ -13,7 +13,7 @@
             <!-- Sol: Ürün Görseli -->
             <div class="product-gallery">
                 <div class="image-container">
-                    <img [src]="selectedVariant?.imageUrl || 'assets/no-image.png'" [alt]="product.name" />
+                    <img [src]="selectedVariant?.imageUrl || product.imageUrl || 'assets/no-image.png'" [alt]="product.name" />
                     <div class="zoom-hint"><i class="pi pi-search-plus"></i></div>
                 </div>
             </div>

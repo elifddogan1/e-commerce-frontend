@@ -8,7 +8,6 @@ import { CategoryDTO } from '../../../../shared/models/product.model';
 @Component({
   selector: 'app-add-product',
   standalone: true,
-  // Sadece hatasız çalışan temel modülleri bıraktık
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.scss']
@@ -32,6 +31,7 @@ export class AddProductComponent implements OnInit {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', Validators.required],
+      imageUrl: [''],
       basePrice: [null, [Validators.required, Validators.min(0)]],
       categoryId: [null, Validators.required],
       variants: this.fb.array([]),
@@ -46,6 +46,7 @@ export class AddProductComponent implements OnInit {
     const variantGroup = this.fb.group({
       name: ['', Validators.required],
       sku: ['', Validators.required],
+      imageUrl: [''], // BU SATIR EKLENDİ
       price: [null, [Validators.required, Validators.min(0)]],
       stockQuantity: [null, [Validators.required, Validators.min(0)]],
     });
